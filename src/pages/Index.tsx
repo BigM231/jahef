@@ -42,7 +42,7 @@ const Index = () => {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero py-20 md:py-32">
+      <section className="relative bg-gradient-hero py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="flex-1 text-center md:text-left">
