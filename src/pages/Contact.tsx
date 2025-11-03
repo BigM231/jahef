@@ -7,41 +7,45 @@ import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import logo from "@/assets/jahef-logo.png";
-
 const Contact = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     subject: "",
-    message: "",
+    message: ""
   });
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Form submission logic will be handled by admin dashboard
     toast({
       title: "Message Sent!",
-      description: "Thank you for contacting us. We'll respond soon.",
+      description: "Thank you for contacting us. We'll respond soon."
     });
-    setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: ""
+    });
   };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Navigation />
 
       {/* Hero Section */}
       <section className="bg-gradient-hero py-16">
         <div className="container mx-auto px-4 text-center">
-          <img src={logo} alt="JAHEF Logo" className="w-20 h-20 mx-auto mb-4" />
+          
           <h1 className="font-heading font-bold text-4xl md:text-6xl text-white mb-4">
             Contact Us
           </h1>
@@ -63,102 +67,41 @@ const Contact = () => {
               </h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="block font-secondary font-semibold mb-2"
-                  >
+                  <label htmlFor="name" className="block font-secondary font-semibold mb-2">
                     Full Name *
                   </label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="rounded-lg"
-                    placeholder="Enter your full name"
-                  />
+                  <Input id="name" name="name" value={formData.name} onChange={handleChange} required className="rounded-lg" placeholder="Enter your full name" />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block font-secondary font-semibold mb-2"
-                  >
+                  <label htmlFor="email" className="block font-secondary font-semibold mb-2">
                     Email Address *
                   </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="rounded-lg"
-                    placeholder="your.email@example.com"
-                  />
+                  <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required className="rounded-lg" placeholder="your.email@example.com" />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="phone"
-                    className="block font-secondary font-semibold mb-2"
-                  >
+                  <label htmlFor="phone" className="block font-secondary font-semibold mb-2">
                     Phone Number
                   </label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="rounded-lg"
-                    placeholder="+234 XXX XXX XXXX"
-                  />
+                  <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} className="rounded-lg" placeholder="+234 XXX XXX XXXX" />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="subject"
-                    className="block font-secondary font-semibold mb-2"
-                  >
+                  <label htmlFor="subject" className="block font-secondary font-semibold mb-2">
                     Subject *
                   </label>
-                  <Input
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="rounded-lg"
-                    placeholder="What is this regarding?"
-                  />
+                  <Input id="subject" name="subject" value={formData.subject} onChange={handleChange} required className="rounded-lg" placeholder="What is this regarding?" />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="message"
-                    className="block font-secondary font-semibold mb-2"
-                  >
+                  <label htmlFor="message" className="block font-secondary font-semibold mb-2">
                     Message *
                   </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    className="rounded-lg"
-                    placeholder="Tell us how we can help..."
-                  />
+                  <Textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows={6} className="rounded-lg" placeholder="Tell us how we can help..." />
                 </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-gradient-hero text-white font-secondary font-bold hover:opacity-90 transition-opacity rounded-full"
-                >
+                <Button type="submit" size="lg" className="w-full bg-gradient-hero text-white font-secondary font-bold hover:opacity-90 transition-opacity rounded-full">
                   Send Message
                   <Send className="ml-2" size={18} />
                 </Button>
@@ -222,22 +165,10 @@ const Contact = () => {
                   Stay connected with our work and updates on social media
                 </p>
                 <div className="flex gap-4">
-                  <a
-                    href="https://facebook.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-primary hover:bg-primary/90 text-white p-3 rounded-full transition-colors"
-                    aria-label="Facebook"
-                  >
+                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="bg-primary hover:bg-primary/90 text-white p-3 rounded-full transition-colors" aria-label="Facebook">
                     <Facebook size={24} />
                   </a>
-                  <a
-                    href="https://tiktok.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-accent hover:bg-accent/90 text-white p-3 rounded-full transition-colors"
-                    aria-label="TikTok"
-                  >
+                  <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="bg-accent hover:bg-accent/90 text-white p-3 rounded-full transition-colors" aria-label="TikTok">
                     <Send size={24} />
                   </a>
                 </div>
@@ -248,8 +179,6 @@ const Contact = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
