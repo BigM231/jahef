@@ -8,41 +8,37 @@ import logo from "@/assets/jahef-logo.png";
 import galleryImage1 from "@/assets/gallery/school-visit-1.jpeg";
 import galleryImage2 from "@/assets/gallery/founder-with-children-2.jpeg";
 import galleryImage3 from "@/assets/gallery/school-materials-new.jpeg";
-
 const Index = () => {
-  const programs = [
-    {
-      icon: <Heart className="w-12 h-12 text-secondary" />,
-      title: "Health Education",
-      description:
-        "Providing essential health education and preventive care to communities, focusing on deworming programs that improve health and school participation.",
-      color: "from-secondary/20 to-secondary/10",
-    },
-    {
-      icon: <GraduationCap className="w-12 h-12 text-accent" />,
-      title: "School Support",
-      description:
-        "Distributing school materials including notebooks, uniforms, sandals, and school bags to ensure children can attend school with dignity and preparedness.",
-      color: "from-accent/20 to-accent/10",
-    },
-    {
-      icon: <Users className="w-12 h-12 text-primary" />,
-      title: "Community Empowerment",
-      description:
-        "Supporting women, youth, widows, and families through programs that provide resources, encouragement, and pathways to self-sufficiency.",
-      color: "from-primary/20 to-primary/10",
-    },
-  ];
-
-  const stats = [
-    { number: "500+", label: "Children Supported" },
-    { number: "10+", label: "Schools Reached" },
-    { number: "50+", label: "Families Empowered" },
-    { number: "100%", label: "Hearts Touched" },
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  const programs = [{
+    icon: <Heart className="w-12 h-12 text-secondary" />,
+    title: "Health Education",
+    description: "Providing essential health education and preventive care to communities, focusing on deworming programs that improve health and school participation.",
+    color: "from-secondary/20 to-secondary/10"
+  }, {
+    icon: <GraduationCap className="w-12 h-12 text-accent" />,
+    title: "School Support",
+    description: "Distributing school materials including notebooks, uniforms, sandals, and school bags to ensure children can attend school with dignity and preparedness.",
+    color: "from-accent/20 to-accent/10"
+  }, {
+    icon: <Users className="w-12 h-12 text-primary" />,
+    title: "Community Empowerment",
+    description: "Supporting women, youth, widows, and families through programs that provide resources, encouragement, and pathways to self-sufficiency.",
+    color: "from-primary/20 to-primary/10"
+  }];
+  const stats = [{
+    number: "500+",
+    label: "Children Supported"
+  }, {
+    number: "10+",
+    label: "Schools Reached"
+  }, {
+    number: "50+",
+    label: "Families Empowered"
+  }, {
+    number: "100%",
+    label: "Hearts Touched"
+  }];
+  return <div className="min-h-screen flex flex-col">
       <Navigation />
 
       {/* Hero Section */}
@@ -51,11 +47,7 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="flex-1 text-center md:text-left">
               <div className="flex justify-center md:justify-start mb-6">
-                <img
-                  src={logo}
-                  alt="JAHEF Logo"
-                  className="w-24 h-24 md:w-32 md:h-32"
-                />
+                
               </div>
               <h1 className="font-heading font-bold text-4xl md:text-6xl text-white leading-tight mb-6">
                 Transforming Lives Through Compassion
@@ -67,30 +59,19 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link to="/donate">
-                  <Button
-                    size="lg"
-                    className="bg-white text-primary hover:bg-white/90 font-secondary font-bold text-lg px-8 rounded-full"
-                  >
+                  <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-secondary font-bold text-lg px-8 rounded-full">
                     Donate Now
                   </Button>
                 </Link>
                 <Link to="/about">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-secondary font-bold text-lg px-8 rounded-full"
-                  >
+                  <Button size="lg" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-secondary font-bold text-lg px-8 rounded-full">
                     Our Story
                   </Button>
                 </Link>
               </div>
             </div>
             <div className="flex-1">
-              <img
-                src={galleryImage1}
-                alt="JAHEF community work"
-                className="rounded-2xl shadow-2xl w-full"
-              />
+              <img src={galleryImage1} alt="JAHEF community work" className="rounded-2xl shadow-2xl w-full" />
             </div>
           </div>
         </div>
@@ -100,16 +81,14 @@ const Index = () => {
       <section className="py-12 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
+            {stats.map((stat, index) => <div key={index} className="text-center">
                 <div className="font-heading font-bold text-4xl md:text-5xl text-primary mb-2">
                   {stat.number}
                 </div>
                 <div className="font-secondary text-muted-foreground">
                   {stat.label}
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -128,11 +107,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {programs.map((program, index) => (
-              <Card
-                key={index}
-                className="border-none shadow-lg hover:shadow-xl transition-shadow rounded-2xl overflow-hidden"
-              >
+            {programs.map((program, index) => <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow rounded-2xl overflow-hidden">
                 <div className={`h-2 bg-gradient-to-r ${program.color}`} />
                 <CardContent className="p-8">
                   <div className="mb-6">{program.icon}</div>
@@ -142,15 +117,11 @@ const Index = () => {
                   <p className="text-muted-foreground leading-relaxed mb-6">
                     {program.description}
                   </p>
-                  <Link
-                    to="/programs"
-                    className="inline-flex items-center gap-2 text-primary font-secondary font-semibold hover:gap-3 transition-all"
-                  >
+                  <Link to="/programs" className="inline-flex items-center gap-2 text-primary font-secondary font-semibold hover:gap-3 transition-all">
                     Learn More <ArrowRight size={18} />
                   </Link>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -168,30 +139,14 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <img
-              src={galleryImage1}
-              alt="School visit"
-              className="rounded-xl w-full h-64 object-cover shadow-lg hover:shadow-xl transition-shadow"
-            />
-            <img
-              src={galleryImage2}
-              alt="Founder with children"
-              className="rounded-xl w-full h-64 object-cover shadow-lg hover:shadow-xl transition-shadow"
-            />
-            <img
-              src={galleryImage3}
-              alt="Materials distribution"
-              className="rounded-xl w-full h-64 object-cover shadow-lg hover:shadow-xl transition-shadow"
-            />
+            <img src={galleryImage1} alt="School visit" className="rounded-xl w-full h-64 object-cover shadow-lg hover:shadow-xl transition-shadow" />
+            <img src={galleryImage2} alt="Founder with children" className="rounded-xl w-full h-64 object-cover shadow-lg hover:shadow-xl transition-shadow" />
+            <img src={galleryImage3} alt="Materials distribution" className="rounded-xl w-full h-64 object-cover shadow-lg hover:shadow-xl transition-shadow" />
           </div>
 
           <div className="text-center mt-8">
             <Link to="/gallery">
-              <Button
-                variant="outline"
-                size="lg"
-                className="font-secondary font-semibold rounded-full"
-              >
+              <Button variant="outline" size="lg" className="font-secondary font-semibold rounded-full">
                 View Full Gallery
               </Button>
             </Link>
@@ -213,19 +168,12 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/donate">
-              <Button
-                size="lg"
-                className="bg-white text-primary hover:bg-white/90 font-secondary font-bold text-lg px-8 rounded-full"
-              >
+              <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-secondary font-bold text-lg px-8 rounded-full">
                 Make a Donation
               </Button>
             </Link>
             <Link to="/contact">
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-secondary font-bold text-lg px-8 rounded-full"
-              >
+              <Button size="lg" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-secondary font-bold text-lg px-8 rounded-full">
                 Get Involved
               </Button>
             </Link>
@@ -234,8 +182,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
