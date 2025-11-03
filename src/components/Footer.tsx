@@ -10,7 +10,7 @@ const Footer = () => {
           {/* Logo and Mission */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src={logo} alt="JAHEF Logo" className="h-16 w-16" />
+              <img src={logo} alt="JAHEF Logo" className="h-16 w-16 object-contain" />
               <div>
                 <h3 className="font-heading font-bold text-xl">JAHEF</h3>
                 <p className="text-sm opacity-90">
