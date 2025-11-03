@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Facebook, Send, Mail, MapPin, Phone } from "lucide-react";
-import logo from "@/assets/jahef-logo-white.png";
+import logo from "@/assets/jahef-logo-white-alt.png";
 
 const Footer = () => {
   return (
