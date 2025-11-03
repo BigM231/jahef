@@ -2,6 +2,9 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import newsImage1 from "@/assets/gallery/school-materials-distribution-2.jpg";
+import newsImage2 from "@/assets/gallery/school-visit-7.jpg";
+import newsImage3 from "@/assets/gallery/community-outreach-1.jpg";
 
 const News = () => {
   const articles = [
@@ -12,7 +15,7 @@ const News = () => {
       date: "October 21, 2025",
       readTime: "3 min read",
       category: "School Support",
-      image: "/api/placeholder/600/400",
+      image: newsImage1,
     },
     {
       title: "Deworming Program Reaches 10 Schools",
@@ -21,7 +24,7 @@ const News = () => {
       date: "September 15, 2025",
       readTime: "4 min read",
       category: "Health Education",
-      image: "/api/placeholder/600/400",
+      image: newsImage2,
     },
     {
       title: "Community Empowerment Workshop for Women",
@@ -30,7 +33,7 @@ const News = () => {
       date: "August 30, 2025",
       readTime: "5 min read",
       category: "Community Empowerment",
-      image: "/api/placeholder/600/400",
+      image: newsImage3,
     },
   ];
 
@@ -60,8 +63,13 @@ const News = () => {
                 key={index}
                 className="border-none shadow-lg hover:shadow-xl transition-shadow rounded-2xl overflow-hidden group cursor-pointer"
               >
-                <div className="relative h-48 bg-gradient-card overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-secondary/20 to-accent/20" />
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={article.image} 
+                    alt={article.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/40" />
                   <div className="absolute top-4 left-4">
                     <span className="inline-block bg-secondary text-white text-xs font-secondary font-semibold px-3 py-1 rounded-full">
                       {article.category}
