@@ -29,6 +29,16 @@ import video3 from "@/assets/gallery/videos/video-3.mp4";
 import video4 from "@/assets/gallery/videos/video-4.mp4";
 import video5 from "@/assets/gallery/videos/video-5.mp4";
 import video6 from "@/assets/gallery/videos/video-6.mp4";
+import image20 from "@/assets/gallery/founder-with-administrators-1.jpg";
+import image21 from "@/assets/gallery/founder-with-students-1.jpg";
+import image22 from "@/assets/gallery/materials-distribution-7.jpg";
+import image23 from "@/assets/gallery/school-meeting-1.jpg";
+import image24 from "@/assets/gallery/founder-with-students-2.jpg";
+import image25 from "@/assets/gallery/school-partnership-1.jpg";
+import image26 from "@/assets/gallery/educators-meeting-1.jpg";
+import image27 from "@/assets/gallery/educators-meeting-2.jpg";
+import image28 from "@/assets/gallery/educators-meeting-3.jpg";
+import image29 from "@/assets/gallery/school-meeting-2.jpg";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -128,6 +138,56 @@ const Gallery = () => {
     {
       src: image19,
       alt: "Community engagement and partnership meeting",
+      category: "Community Outreach",
+    },
+    {
+      src: image20,
+      alt: "Founder with school administrators in head teacher's office",
+      category: "Community Outreach",
+    },
+    {
+      src: image21,
+      alt: "Founder walking with students in school hallway",
+      category: "School Support",
+    },
+    {
+      src: image22,
+      alt: "Founder distributing educational materials to students",
+      category: "School Support",
+    },
+    {
+      src: image23,
+      alt: "Meeting with school administrator to discuss partnership",
+      category: "Community Outreach",
+    },
+    {
+      src: image24,
+      alt: "Founder surrounded by excited students outside school building",
+      category: "School Support",
+    },
+    {
+      src: image25,
+      alt: "Founder with school administrator discussing education initiatives",
+      category: "Community Outreach",
+    },
+    {
+      src: image26,
+      alt: "Group meeting with educators and school staff",
+      category: "Community Outreach",
+    },
+    {
+      src: image27,
+      alt: "Collaborative meeting with school educators",
+      category: "Community Outreach",
+    },
+    {
+      src: image28,
+      alt: "Partnership discussion with school leadership team",
+      category: "Community Outreach",
+    },
+    {
+      src: image29,
+      alt: "Founder in school office discussing program implementation",
       category: "Community Outreach",
     },
   ];
