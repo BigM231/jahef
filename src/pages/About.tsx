@@ -178,31 +178,43 @@ const About = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-card rounded-2xl shadow-xl overflow-hidden transform transition-transform hover:scale-105">
+            <div className="bg-card rounded-2xl shadow-xl overflow-hidden">
               <img
                 src={secretaryEuodia}
                 alt="Akpobi Euodia Oghenevwerhe"
                 className="w-full h-80 object-cover"
               />
-              <div className="p-6 text-center">
+              <div className="p-6">
                 <h3 className="font-heading font-bold text-xl mb-2 text-primary">
-                  Akpobi Euodia Oghenevwerhe
+                  ✨ Akpobi Euodia Oghenevwerhe
                 </h3>
-                <p className="text-muted-foreground">Secretary</p>
+                <p className="text-accent font-semibold mb-4">Secretary</p>
+                <p className="text-foreground leading-relaxed">
+                  Euodia is one of the most dedicated pillars of the Jessica Akpobi Health Empowering Foundation (JAHEF). With her calm presence and sharp organizational skills, she ensures that every outreach, school program, and empowerment event runs smoothly.
+                </p>
+                <p className="text-foreground leading-relaxed mt-3">
+                  Behind the scenes, Euodia coordinates communication between volunteers, donors, and beneficiaries, keeping the heart of JAHEF beating with order and compassion. Her kindness and humility shine through every task, reminding everyone that true service begins with love and discipline.
+                </p>
               </div>
             </div>
 
-            <div className="bg-card rounded-2xl shadow-xl overflow-hidden transform transition-transform hover:scale-105">
+            <div className="bg-card rounded-2xl shadow-xl overflow-hidden">
               <img
                 src={secretaryBlessing}
                 alt="Osadolor Blessing Ngozi"
                 className="w-full h-80 object-cover"
               />
-              <div className="p-6 text-center">
+              <div className="p-6">
                 <h3 className="font-heading font-bold text-xl mb-2 text-primary">
-                  Osadolor Blessing Ngozi
+                  💫 Osadolor Blessing Ngozi
                 </h3>
-                <p className="text-muted-foreground">Secretary</p>
+                <p className="text-accent font-semibold mb-4">Secretary</p>
+                <p className="text-foreground leading-relaxed">
+                  Blessing is known for her bright energy and genuine empathy. As one of JAHEF's secretaries, she bridges the gap between planning and action, making sure every project reflects the Foundation's mission of care and community upliftment.
+                </p>
+                <p className="text-foreground leading-relaxed mt-3">
+                  Her attention to detail, warm communication, and devotion to helping the less privileged make her an irreplaceable member of the JAHEF team. Whether it's organizing reports, welcoming partners, or assisting during school visits, Blessing brings a sense of joy and excellence to every effort.
+                </p>
               </div>
             </div>
           </div>
