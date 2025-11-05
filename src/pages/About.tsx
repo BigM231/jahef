@@ -2,6 +2,8 @@ import { Heart, Target, Lightbulb } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import founderImage from "@/assets/gallery/founder-portrait-new.jpeg";
+import secretaryEuodia from "@/assets/team/secretary-euodia.png";
+import secretaryBlessing from "@/assets/team/secretary-blessing.png";
 
 const About = () => {
   return (
@@ -157,6 +159,50 @@ const About = () => {
                     </p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="font-heading font-bold text-3xl md:text-5xl text-primary mb-4">
+              Our Team
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Meet the dedicated secretaries supporting JAHEF's mission
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="bg-card rounded-2xl shadow-xl overflow-hidden transform transition-transform hover:scale-105">
+              <img
+                src={secretaryEuodia}
+                alt="Akpobi Euodia Oghenevwerhe"
+                className="w-full h-80 object-cover"
+              />
+              <div className="p-6 text-center">
+                <h3 className="font-heading font-bold text-xl mb-2 text-primary">
+                  Akpobi Euodia Oghenevwerhe
+                </h3>
+                <p className="text-muted-foreground">Secretary</p>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-2xl shadow-xl overflow-hidden transform transition-transform hover:scale-105">
+              <img
+                src={secretaryBlessing}
+                alt="Osadolor Blessing Ngozi"
+                className="w-full h-80 object-cover"
+              />
+              <div className="p-6 text-center">
+                <h3 className="font-heading font-bold text-xl mb-2 text-primary">
+                  Osadolor Blessing Ngozi
+                </h3>
+                <p className="text-muted-foreground">Secretary</p>
               </div>
             </div>
           </div>
