@@ -29,6 +29,7 @@ import video3 from "@/assets/gallery/videos/video-3.mp4";
 import video4 from "@/assets/gallery/videos/video-4.mp4";
 import video5 from "@/assets/gallery/videos/video-5.mp4";
 import video6 from "@/assets/gallery/videos/video-6.mp4";
+import video7 from "@/assets/gallery/videos/video-7.mp4";
 import image20 from "@/assets/gallery/founder-with-administrators-1.jpg";
 import image21 from "@/assets/gallery/founder-with-students-1.jpg";
 import image22 from "@/assets/gallery/materials-distribution-7.jpg";
@@ -222,6 +223,11 @@ const Gallery = () => {
       src: video6,
       alt: "School visit highlights",
       category: "School Support",
+    },
+    {
+      src: video7,
+      alt: "Community engagement and support",
+      category: "Community Outreach",
     },
   ];
 
