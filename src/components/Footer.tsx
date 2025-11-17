@@ -115,7 +115,7 @@ const Footer = () => {
                 <Instagram size={24} />
               </a>
               <a
-                href="https://tiktok.com"
+                href="https://tiktok.com/@J_h_empowered_foundation"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"

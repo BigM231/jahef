@@ -172,7 +172,7 @@ const Contact = () => {
                   <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="bg-pink-500 hover:bg-pink-600 text-white p-3 rounded-full transition-colors" aria-label="Instagram">
                     <Instagram size={24} />
                   </a>
-                  <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="TikTok">
+                  <a href="https://tiktok.com/@J_h_empowered_foundation" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="TikTok">
                     <TikTokIcon size={24} />
                   </a>
                   <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="X (Twitter)">
