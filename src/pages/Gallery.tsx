@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -41,11 +42,52 @@ import image27 from "@/assets/gallery/educators-meeting-2.jpg";
 import image28 from "@/assets/gallery/educators-meeting-3.jpg";
 import image29 from "@/assets/gallery/school-meeting-2.jpg";
 
+interface MediaItem {
+  src: string;
+  alt: string;
+  category: string;
+}
+
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [dbImages, setDbImages] = useState<MediaItem[]>([]);
+  const [dbVideos, setDbVideos] = useState<MediaItem[]>([]);
 
-  const galleryImages = [
+  useEffect(() => {
+    // Fetch media from database
+    const fetchMedia = async () => {
+      const { data: media } = await supabase
+        .from("gallery_media")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (media) {
+        const images = media
+          .filter((item) => item.media_type === "image")
+          .map((item) => ({
+            src: item.file_url,
+            alt: item.description || item.title,
+            category: item.category,
+          }));
+
+        const videos = media
+          .filter((item) => item.media_type === "video")
+          .map((item) => ({
+            src: item.file_url,
+            alt: item.description || item.title,
+            category: item.category,
+          }));
+
+        setDbImages(images);
+        setDbVideos(videos);
+      }
+    };
+
+    fetchMedia();
+  }, []);
+
+  const staticGalleryImages: MediaItem[] = [
     {
       src: image1,
       alt: "School visit - Children celebrating with distributed materials",
@@ -193,7 +235,7 @@ const Gallery = () => {
     },
   ];
 
-  const galleryVideos = [
+  const staticGalleryVideos: MediaItem[] = [
     {
       src: video1,
       alt: "Community outreach program video",
@@ -230,6 +272,10 @@ const Gallery = () => {
       category: "Community Outreach",
     },
   ];
+
+  // Combine static and database media
+  const galleryImages = [...dbImages, ...staticGalleryImages];
+  const galleryVideos = [...dbVideos, ...staticGalleryVideos];
 
   return (
     <div className="min-h-screen flex flex-col">
