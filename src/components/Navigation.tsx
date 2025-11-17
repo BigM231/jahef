@@ -1,12 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/jahef-logo-color.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    // Check authentication status
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -50,6 +65,14 @@ const Navigation = () => {
                 {item.name}
               </Link>
             ))}
+            {isAuthenticated && (
+              <Link to="/upload">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Upload size={16} />
+                  Upload
+                </Button>
+              </Link>
+            )}
             <Link to="/donate">
               <Button className="bg-gradient-hero text-white font-secondary font-bold hover:opacity-90 transition-opacity rounded-full px-6">
                 Donate Now
@@ -84,6 +107,14 @@ const Navigation = () => {
                 {item.name}
               </Link>
             ))}
+            {isAuthenticated && (
+              <Link to="/upload" onClick={() => setIsOpen(false)}>
+                <Button variant="outline" className="w-full mt-4 gap-2">
+                  <Upload size={16} />
+                  Upload Media
+                </Button>
+              </Link>
+            )}
             <Link to="/donate" onClick={() => setIsOpen(false)}>
               <Button className="w-full mt-4 bg-gradient-hero text-white font-secondary font-bold hover:opacity-90 transition-opacity rounded-full">
                 Donate Now
