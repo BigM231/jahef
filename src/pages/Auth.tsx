@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { z } from "zod";
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -14,9 +15,30 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Validation schemas
+  const authSchema = z.object({
+    email: z.string().email("Invalid email address").max(255, "Email too long"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(72, "Password too long")
+      .regex(/[A-Z]/, "Password must contain an uppercase letter")
+      .regex(/[a-z]/, "Password must contain a lowercase letter")
+      .regex(/[0-9]/, "Password must contain a number"),
+  });
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Validate input
+    const validation = authSchema.safeParse({ email, password });
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast.error(firstError.message);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const { error } = await supabase.auth.signUp({
@@ -40,6 +62,20 @@ export default function Auth() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Basic validation for sign in (less strict than signup)
+    const signInSchema = z.object({
+      email: z.string().email("Invalid email address"),
+      password: z.string().min(1, "Password is required"),
+    });
+
+    const validation = signInSchema.safeParse({ email, password });
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast.error(firstError.message);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
