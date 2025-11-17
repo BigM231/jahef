@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send, Facebook } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Facebook, Instagram, Twitter, Youtube, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -124,7 +124,7 @@ const Contact = () => {
                         Location
                       </h3>
                       <p className="text-muted-foreground">
-                        Lagos, Nigeria
+                        13 Memudu Bada St, Ikotun, Lagos 102213, Lagos, Nigeria
                       </p>
                     </div>
                   </div>
@@ -138,7 +138,7 @@ const Contact = () => {
                         Phone
                       </h3>
                       <p className="text-muted-foreground">
-                        +234 XXX XXX XXXX
+                        +234 81-0543-6168
                       </p>
                     </div>
                   </div>
@@ -165,11 +165,20 @@ const Contact = () => {
                   Stay connected with our work and updates on social media
                 </p>
                 <div className="flex gap-4">
-                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="bg-primary hover:bg-primary/90 text-white p-3 rounded-full transition-colors" aria-label="Facebook">
+                  <a href="https://facebook.com/JessicaAkpobiHealthEmpoweringFoundation" target="_blank" rel="noopener noreferrer" className="bg-primary hover:bg-primary/90 text-white p-3 rounded-full transition-colors" aria-label="Facebook">
                     <Facebook size={24} />
                   </a>
-                  <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="bg-accent hover:bg-accent/90 text-white p-3 rounded-full transition-colors" aria-label="TikTok">
-                    <Send size={24} />
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="bg-pink-500 hover:bg-pink-600 text-white p-3 rounded-full transition-colors" aria-label="Instagram">
+                    <Instagram size={24} />
+                  </a>
+                  <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="TikTok">
+                    <Music size={24} />
+                  </a>
+                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="X (Twitter)">
+                    <Twitter size={24} />
+                  </a>
+                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-full transition-colors" aria-label="YouTube">
+                    <Youtube size={24} />
                   </a>
                 </div>
               </div>

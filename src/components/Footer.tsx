@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Send, Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Mail, MapPin, Phone, Instagram, Twitter, Youtube, Music } from "lucide-react";
 import logo from "@/assets/jahef-logo-white-alt.png";
 
 const Footer = () => {
@@ -79,12 +79,12 @@ const Footer = () => {
               <li className="flex items-start gap-2">
                 <MapPin size={18} className="mt-1 flex-shrink-0" />
                 <span className="text-sm opacity-90">
-                  Lagos, Nigeria
+                  13 Memudu Bada St, Ikotun, Lagos 102213, Lagos, Nigeria
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <Phone size={18} className="mt-1 flex-shrink-0" />
-                <span className="text-sm opacity-90">+234 XXX XXX XXXX</span>
+                <span className="text-sm opacity-90">+234 81-0543-6168</span>
               </li>
               <li className="flex items-start gap-2">
                 <Mail size={18} className="mt-1 flex-shrink-0" />
@@ -96,7 +96,7 @@ const Footer = () => {
 
             <div className="flex gap-4 mt-4">
               <a
-                href="https://facebook.com"
+                href="https://facebook.com/JessicaAkpobiHealthEmpoweringFoundation"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
@@ -105,13 +105,40 @@ const Footer = () => {
                 <Facebook size={24} />
               </a>
               <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition-opacity"
+                aria-label="Instagram"
+              >
+                <Instagram size={24} />
+              </a>
+              <a
                 href="https://tiktok.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
                 aria-label="TikTok"
               >
-                <Send size={24} />
+                <Music size={24} />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition-opacity"
+                aria-label="X (Twitter)"
+              >
+                <Twitter size={24} />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition-opacity"
+                aria-label="YouTube"
+              >
+                <Youtube size={24} />
               </a>
             </div>
           </div>
