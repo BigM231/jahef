@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send, Facebook, Instagram, Twitter, Youtube, Music } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import TikTokIcon from "@/components/TikTokIcon";
 import logo from "@/assets/jahef-logo.png";
 const Contact = () => {
   const {
@@ -172,7 +173,7 @@ const Contact = () => {
                     <Instagram size={24} />
                   </a>
                   <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="TikTok">
-                    <Music size={24} />
+                    <TikTokIcon size={24} />
                   </a>
                   <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="X (Twitter)">
                     <Twitter size={24} />
