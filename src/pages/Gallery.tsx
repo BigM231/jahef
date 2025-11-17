@@ -41,6 +41,14 @@ import image26 from "@/assets/gallery/educators-meeting-1.jpg";
 import image27 from "@/assets/gallery/educators-meeting-2.jpg";
 import image28 from "@/assets/gallery/educators-meeting-3.jpg";
 import image29 from "@/assets/gallery/school-meeting-2.jpg";
+import image30 from "@/assets/gallery/child-with-plant.jpg";
+import video8 from "@/assets/gallery/videos/video-8.mp4";
+import video9 from "@/assets/gallery/videos/video-9.mp4";
+import video10 from "@/assets/gallery/videos/video-10.mp4";
+import video11 from "@/assets/gallery/videos/video-11.mp4";
+import video12 from "@/assets/gallery/videos/video-12.mp4";
+import video13 from "@/assets/gallery/videos/video-13.mp4";
+import video14 from "@/assets/gallery/videos/video-14.mp4";
 
 interface MediaItem {
   src: string;
@@ -233,6 +241,11 @@ const Gallery = () => {
       alt: "Founder in school office discussing program implementation",
       category: "Community Outreach",
     },
+    {
+      src: image30,
+      alt: "Child with plant at community outreach event",
+      category: "Community Outreach",
+    },
   ];
 
   const staticGalleryVideos: MediaItem[] = [
@@ -269,6 +282,41 @@ const Gallery = () => {
     {
       src: video7,
       alt: "Community engagement and support",
+      category: "Community Outreach",
+    },
+    {
+      src: video8,
+      alt: "Foundation activities and community support",
+      category: "Community Outreach",
+    },
+    {
+      src: video9,
+      alt: "School program highlights",
+      category: "School Support",
+    },
+    {
+      src: video10,
+      alt: "Educational outreach activities",
+      category: "School Support",
+    },
+    {
+      src: video11,
+      alt: "Community engagement video",
+      category: "Community Outreach",
+    },
+    {
+      src: video12,
+      alt: "Foundation impact stories",
+      category: "Community Outreach",
+    },
+    {
+      src: video13,
+      alt: "School visit and distribution event",
+      category: "School Support",
+    },
+    {
+      src: video14,
+      alt: "Community outreach program",
       category: "Community Outreach",
     },
   ];
