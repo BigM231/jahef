@@ -7,15 +7,37 @@ import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
+// Extend Window interface to include PaystackPop
+declare global {
+  interface Window {
+    PaystackPop: {
+      setup: (options: {
+        key: string;
+        email: string;
+        amount: number;
+        currency: string;
+        ref?: string;
+        onClose: () => void;
+        callback: (response: { reference: string }) => void;
+      }) => {
+        openIframe: () => void;
+      };
+    };
+  }
+}
+
 const Donate = () => {
   const { toast } = useToast();
   const [amount, setAmount] = useState("");
   const [customAmount, setCustomAmount] = useState("");
+  const [email, setEmail] = useState("");
 
   const presetAmounts = [1000, 5000, 10000, 25000, 50000, 100000];
 
   const handleDonation = (gateway: "paystack" | "flutterwave") => {
     const donationAmount = amount || customAmount;
+    
+    // Validate amount
     if (!donationAmount || parseFloat(donationAmount) <= 0) {
       toast({
         title: "Amount Required",
@@ -25,11 +47,68 @@ const Donate = () => {
       return;
     }
 
-    // Payment gateway integration will be implemented here
-    toast({
-      title: "Processing...",
-      description: `Redirecting to ${gateway} payment gateway`,
-    });
+    // Check minimum amount
+    if (parseFloat(donationAmount) < 100) {
+      toast({
+        title: "Minimum Amount",
+        description: "Minimum donation amount is ₦100",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate email
+    if (!email || !email.includes('@')) {
+      toast({
+        title: "Email Required",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (gateway === "paystack") {
+      // Check if Paystack is loaded
+      if (!window.PaystackPop) {
+        toast({
+          title: "Error",
+          description: "Payment system is loading, please try again",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const handler = window.PaystackPop.setup({
+        key: 'pk_test_15df41e162cdb9921b92853aeb232d70b9822985',
+        email: email,
+        amount: parseFloat(donationAmount) * 100, // Convert to kobo
+        currency: 'NGN',
+        ref: 'JAHEF_' + Math.floor(Math.random() * 1000000000 + 1),
+        onClose: function() {
+          toast({
+            title: "Payment Cancelled",
+            description: "You closed the payment window",
+          });
+        },
+        callback: function(response) {
+          toast({
+            title: "Payment Successful!",
+            description: `Thank you for your donation. Reference: ${response.reference}`,
+          });
+          // Reset form
+          setAmount("");
+          setCustomAmount("");
+          setEmail("");
+        },
+      });
+
+      handler.openIframe();
+    } else {
+      toast({
+        title: "Coming Soon",
+        description: "Flutterwave payment will be available soon",
+      });
+    }
   };
 
   const impactExamples = [
@@ -114,6 +193,21 @@ const Donate = () => {
                     placeholder="Enter amount in Naira"
                     className="text-lg p-6 rounded-xl"
                     min="100"
+                  />
+                </div>
+
+                {/* Email Input */}
+                <div className="mb-8">
+                  <label className="block font-secondary font-semibold text-lg mb-3">
+                    Email Address
+                  </label>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="text-lg p-6 rounded-xl"
+                    required
                   />
                 </div>
 
