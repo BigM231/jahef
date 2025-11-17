@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Facebook, Mail, MapPin, Phone, Instagram, Twitter, Youtube, Music } from "lucide-react";
+import { Facebook, Mail, MapPin, Phone, Instagram, Twitter, Youtube } from "lucide-react";
+import TikTokIcon from "@/components/TikTokIcon";
 import logo from "@/assets/jahef-logo-white-alt.png";
 
 const Footer = () => {
@@ -120,7 +121,7 @@ const Footer = () => {
                 className="hover:opacity-80 transition-opacity"
                 aria-label="TikTok"
               >
-                <Music size={24} />
+                <TikTokIcon size={24} />
               </a>
               <a
                 href="https://twitter.com"
