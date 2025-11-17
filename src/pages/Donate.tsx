@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { z } from "zod";
 
 // Extend Window interface to include PaystackPop
 declare global {
@@ -34,34 +35,26 @@ const Donate = () => {
 
   const presetAmounts = [1000, 5000, 10000, 25000, 50000, 100000];
 
+  // Validation schema
+  const donationSchema = z.object({
+    email: z.string().email("Invalid email address").max(255, "Email too long"),
+    amount: z.number().min(100, "Minimum donation is ₦100").positive("Amount must be positive"),
+  });
+
   const handleDonation = (gateway: "paystack" | "flutterwave") => {
     const donationAmount = amount || customAmount;
     
-    // Validate amount
-    if (!donationAmount || parseFloat(donationAmount) <= 0) {
-      toast({
-        title: "Amount Required",
-        description: "Please select or enter a donation amount",
-        variant: "destructive",
-      });
-      return;
-    }
+    // Validate using zod schema
+    const validation = donationSchema.safeParse({
+      email,
+      amount: parseFloat(donationAmount),
+    });
 
-    // Check minimum amount
-    if (parseFloat(donationAmount) < 100) {
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
       toast({
-        title: "Minimum Amount",
-        description: "Minimum donation amount is ₦100",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate email
-    if (!email || !email.includes('@')) {
-      toast({
-        title: "Email Required",
-        description: "Please enter a valid email address",
+        title: "Validation Error",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
@@ -79,7 +72,7 @@ const Donate = () => {
       }
 
       const handler = window.PaystackPop.setup({
-        key: 'pk_test_15df41e162cdb9921b92853aeb232d70b9822985',
+        key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_15df41e162cdb9921b92853aeb232d70b9822985',
         email: email,
         amount: parseFloat(donationAmount) * 100, // Convert to kobo
         currency: 'NGN',
