@@ -2,7 +2,7 @@ import { Heart, Target, Lightbulb } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import founderImage from "@/assets/gallery/founder-portrait-new.jpeg";
-import secretaryEuodia from "@/assets/team/secretary-euodia.png";
+import secretaryEuodia from "@/assets/team/secretary-euodia-new.png";
 import secretaryBlessing from "@/assets/team/secretary-blessing.png";
 
 const About = () => {
