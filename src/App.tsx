@@ -12,6 +12,10 @@ import Contact from "./pages/Contact";
 import Donate from "./pages/Donate";
 import Auth from "./pages/Auth";
 import UploadMedia from "./pages/UploadMedia";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import BlogAdmin from "./pages/BlogAdmin";
+import BlogForm from "./pages/BlogForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +36,11 @@ const App = () => (
           <Route path="/donate" element={<Donate />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/upload" element={<UploadMedia />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/admin/blog" element={<BlogAdmin />} />
+          <Route path="/admin/blog/new" element={<BlogForm />} />
+          <Route path="/admin/blog/edit/:id" element={<BlogForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

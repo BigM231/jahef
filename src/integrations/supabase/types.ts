@@ -14,6 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          additional_images: string[] | null
+          audio_path: string | null
+          audio_url: string | null
+          author_name: string
+          category: Database["public"]["Enums"]["blog_category"]
+          content: string
+          created_at: string
+          deleted_at: string | null
+          excerpt: string | null
+          featured_image_path: string | null
+          featured_image_url: string | null
+          id: string
+          is_series: boolean | null
+          meta_description: string | null
+          next_post_id: string | null
+          previous_post_id: string | null
+          publication_date: string | null
+          scheduled_date: string | null
+          series_name: string | null
+          series_part: number | null
+          slug: string
+          status: Database["public"]["Enums"]["blog_post_status"]
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+          view_count: number | null
+        }
+        Insert: {
+          additional_images?: string[] | null
+          audio_path?: string | null
+          audio_url?: string | null
+          author_name: string
+          category?: Database["public"]["Enums"]["blog_category"]
+          content: string
+          created_at?: string
+          deleted_at?: string | null
+          excerpt?: string | null
+          featured_image_path?: string | null
+          featured_image_url?: string | null
+          id?: string
+          is_series?: boolean | null
+          meta_description?: string | null
+          next_post_id?: string | null
+          previous_post_id?: string | null
+          publication_date?: string | null
+          scheduled_date?: string | null
+          series_name?: string | null
+          series_part?: number | null
+          slug: string
+          status?: Database["public"]["Enums"]["blog_post_status"]
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+          view_count?: number | null
+        }
+        Update: {
+          additional_images?: string[] | null
+          audio_path?: string | null
+          audio_url?: string | null
+          author_name?: string
+          category?: Database["public"]["Enums"]["blog_category"]
+          content?: string
+          created_at?: string
+          deleted_at?: string | null
+          excerpt?: string | null
+          featured_image_path?: string | null
+          featured_image_url?: string | null
+          id?: string
+          is_series?: boolean | null
+          meta_description?: string | null
+          next_post_id?: string | null
+          previous_post_id?: string | null
+          publication_date?: string | null
+          scheduled_date?: string | null
+          series_name?: string | null
+          series_part?: number | null
+          slug?: string
+          status?: Database["public"]["Enums"]["blog_post_status"]
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_next_post_id_fkey"
+            columns: ["next_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_posts_previous_post_id_fkey"
+            columns: ["previous_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gallery_media: {
         Row: {
           category: string
@@ -61,7 +166,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      blog_category:
+        | "success_stories"
+        | "program_updates"
+        | "emergency_appeals"
+        | "community_news"
+        | "case_studies"
+      blog_post_status: "draft" | "published" | "scheduled" | "trash"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -188,6 +299,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      blog_category: [
+        "success_stories",
+        "program_updates",
+        "emergency_appeals",
+        "community_news",
+        "case_studies",
+      ],
+      blog_post_status: ["draft", "published", "scheduled", "trash"],
+    },
   },
 } as const
