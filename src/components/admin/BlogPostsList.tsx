@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import DOMPurify from 'dompurify';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -319,7 +320,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
                         {/* Full Content */}
                         <div 
                           className="prose prose-lg max-w-none dark:prose-invert"
-                          dangerouslySetInnerHTML={{ __html: post.content }}
+                          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
                         />
 
                         {/* Additional Images */}

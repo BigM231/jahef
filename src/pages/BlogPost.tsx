@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import AudioPlayer from '@/components/AudioPlayer';
@@ -178,7 +179,7 @@ export default function BlogPost() {
           {/* Content */}
           <div 
             className="prose prose-lg max-w-none mb-8"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
           />
 
           {/* Audio Player */}
