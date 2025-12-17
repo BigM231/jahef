@@ -22,6 +22,21 @@ import {
 } from '@/hooks/useBlogPosts';
 import { format } from 'date-fns';
 
+// Fallback images from gallery assets
+import schoolMaterialsImg from '@/assets/gallery/school-materials-distribution.jpeg';
+import communityOutreachImg from '@/assets/gallery/community-outreach-1.jpg';
+import educatorsMeetingImg from '@/assets/gallery/educators-meeting-1.jpg';
+import founderWithChildrenImg from '@/assets/gallery/founder-with-children-1.jpeg';
+import schoolVisitImg from '@/assets/gallery/school-visit-1.jpeg';
+
+const FALLBACK_IMAGES: Record<BlogCategory, string> = {
+  success_stories: founderWithChildrenImg,
+  program_updates: schoolMaterialsImg,
+  emergency_appeals: communityOutreachImg,
+  community_news: educatorsMeetingImg,
+  case_studies: schoolVisitImg,
+};
+
 const CATEGORIES: { value: BlogCategory | 'all'; label: string }[] = [
   { value: 'all', label: 'All Categories' },
   { value: 'success_stories', label: 'Success Stories' },
@@ -119,17 +134,11 @@ const News = () => {
                     className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-none shadow-lg rounded-2xl"
                   >
                     <div className="relative h-48 overflow-hidden">
-                      {post.featured_image_url ? (
-                        <img
-                          src={post.featured_image_url}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-muted flex items-center justify-center">
-                          <FileText className="h-12 w-12 text-muted-foreground" />
-                        </div>
-                      )}
+                      <img
+                        src={post.featured_image_url || FALLBACK_IMAGES[post.category]}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/40" />
                       <div className="absolute top-4 left-4">
                         <Badge className={`${getCategoryColor(post.category)} text-white`}>
