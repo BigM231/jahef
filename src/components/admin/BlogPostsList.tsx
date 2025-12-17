@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Search, Edit, Trash2, Eye, ArrowUpDown, FileText, RotateCcw, Calendar, User, EyeOff } from 'lucide-react';
+import { Search, Edit, Trash2, Eye, ArrowUpDown, FileText, RotateCcw, Calendar, User, EyeOff, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { useAllPosts, useDeletePost, BlogPostStatus, getCategoryLabel, getCategoryColor } from '@/hooks/useBlogPosts';
 import { format } from 'date-fns';
 import { useState } from 'react';
@@ -41,6 +41,11 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
   const [deletePostId, setDeletePostId] = useState<string | null>(null);
   const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
   const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
+  const [expandedPosts, setExpandedPosts] = useState<string[]>([]);
+
+  const toggleExpandPost = (id: string) => setExpandedPosts(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
+  const expandAll = () => setExpandedPosts(sortedPosts?.map(p => p.id) || []);
+  const collapseAll = () => setExpandedPosts([]);
 
   const { data: posts, isLoading } = useAllPosts('all', searchQuery);
   const deletePost = useDeletePost();
@@ -144,6 +149,10 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
             <Button variant="outline" onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}>
               <ArrowUpDown className="h-4 w-4 mr-2" />{sortOrder === 'newest' ? 'Newest' : 'Oldest'}
             </Button>
+            <Button variant="outline" onClick={expandedPosts.length === sortedPosts?.length ? collapseAll : expandAll}>
+              <ChevronsUpDown className="h-4 w-4 mr-2" />
+              {expandedPosts.length === sortedPosts?.length ? 'Collapse All' : 'Expand All'}
+            </Button>
           </div>
           {selectedPosts.length > 0 && (
             <div className="flex items-center gap-2">
@@ -163,120 +172,144 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
             <Button onClick={onCreateNew}>Create Post</Button>
           </div>
         ) : (
-          <div className="space-y-8">
-            {sortedPosts?.map((post) => (
-              <article key={post.id} className="bg-card rounded-2xl shadow-lg overflow-hidden border">
-                {/* Admin Actions Bar */}
-                <div className="bg-muted/50 px-6 py-3 flex items-center justify-between border-b">
-                  <div className="flex items-center gap-3">
-                    <Checkbox 
-                      checked={selectedPosts.includes(post.id)} 
-                      onCheckedChange={() => toggleSelectPost(post.id)} 
-                    />
-                    <Badge className="bg-green-500 hover:bg-green-600">Live on /news</Badge>
-                    <span className="text-sm text-muted-foreground flex items-center gap-1">
-                      <Eye size={14} /> {post.view_count || 0} views
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => onEdit(post.id)}>
-                      <Edit className="h-4 w-4 mr-2" />Edit
-                    </Button>
-                    <Button variant="secondary" size="sm" onClick={() => handleUnpublish(post.id)}>
-                      <EyeOff className="h-4 w-4 mr-2" />Unpublish
-                    </Button>
-                    <Button variant="destructive" size="sm" onClick={() => setDeletePostId(post.id)}>
-                      <Trash2 className="h-4 w-4 mr-2" />Delete
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Featured Image */}
-                {post.featured_image_url && (
-                  <div className="relative h-64 md:h-80 overflow-hidden">
-                    <img 
-                      src={post.featured_image_url} 
-                      alt={post.title} 
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-6 left-6 right-6">
-                      <Badge className={`${getCategoryColor(post.category)} text-white mb-3`}>
-                        {getCategoryLabel(post.category)}
-                      </Badge>
-                      <h2 className="font-heading font-bold text-2xl md:text-3xl text-white">
-                        {post.title}
-                      </h2>
+          <div className="space-y-4">
+            {sortedPosts?.map((post) => {
+              const isExpanded = expandedPosts.includes(post.id);
+              return (
+                <article key={post.id} className="bg-card rounded-2xl shadow-lg overflow-hidden border">
+                  {/* Admin Actions Bar - Always visible */}
+                  <div 
+                    className="bg-muted/50 px-6 py-3 flex items-center justify-between cursor-pointer hover:bg-muted/70 transition-colors"
+                    onClick={() => toggleExpandPost(post.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Checkbox 
+                        checked={selectedPosts.includes(post.id)} 
+                        onCheckedChange={() => toggleSelectPost(post.id)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      {post.featured_image_url && (
+                        <img src={post.featured_image_url} alt="" className="w-12 h-12 object-cover rounded" />
+                      )}
+                      <div className="flex flex-col">
+                        <span className="font-semibold line-clamp-1">{post.title}</span>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Badge className={`${getCategoryColor(post.category)} text-white text-xs`}>
+                            {getCategoryLabel(post.category)}
+                          </Badge>
+                          <span>{post.publication_date ? format(new Date(post.publication_date), 'MMM d, yyyy') : '-'}</span>
+                          <span className="flex items-center gap-1"><Eye size={12} /> {post.view_count || 0}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(post.id); }}>
+                        <Edit className="h-4 w-4 mr-1" />Edit
+                      </Button>
+                      <Button variant="secondary" size="sm" onClick={(e) => { e.stopPropagation(); handleUnpublish(post.id); }}>
+                        <EyeOff className="h-4 w-4 mr-1" />Unpublish
+                      </Button>
+                      <Button variant="destructive" size="sm" onClick={(e) => { e.stopPropagation(); setDeletePostId(post.id); }}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                      </Button>
                     </div>
                   </div>
-                )}
 
-                {/* Content */}
-                <div className="p-6 md:p-8">
-                  {!post.featured_image_url && (
+                  {/* Collapsible Content */}
+                  {isExpanded && (
                     <>
-                      <Badge className={`${getCategoryColor(post.category)} text-white mb-3`}>
-                        {getCategoryLabel(post.category)}
-                      </Badge>
-                      <h2 className="font-heading font-bold text-2xl md:text-3xl mb-4">
-                        {post.title}
-                      </h2>
+                      {/* Featured Image */}
+                      {post.featured_image_url && (
+                        <div className="relative h-64 md:h-80 overflow-hidden">
+                          <img 
+                            src={post.featured_image_url} 
+                            alt={post.title} 
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                          <div className="absolute bottom-6 left-6 right-6">
+                            <Badge className={`${getCategoryColor(post.category)} text-white mb-3`}>
+                              {getCategoryLabel(post.category)}
+                            </Badge>
+                            <h2 className="font-heading font-bold text-2xl md:text-3xl text-white">
+                              {post.title}
+                            </h2>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Content */}
+                      <div className="p-6 md:p-8">
+                        {!post.featured_image_url && (
+                          <>
+                            <Badge className={`${getCategoryColor(post.category)} text-white mb-3`}>
+                              {getCategoryLabel(post.category)}
+                            </Badge>
+                            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-4">
+                              {post.title}
+                            </h2>
+                          </>
+                        )}
+
+                        {/* Meta Info */}
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6 pb-6 border-b">
+                          <span className="flex items-center gap-2">
+                            <Calendar size={16} />
+                            {post.publication_date 
+                              ? format(new Date(post.publication_date), 'MMMM d, yyyy')
+                              : format(new Date(post.created_at), 'MMMM d, yyyy')}
+                          </span>
+                          <span className="flex items-center gap-2">
+                            <User size={16} />
+                            {post.author_name}
+                          </span>
+                          {post.tags && post.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {post.tags.map((tag, i) => (
+                                <Badge key={i} variant="outline" className="text-xs">{tag}</Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Excerpt */}
+                        {post.excerpt && (
+                          <p className="text-lg text-muted-foreground italic mb-6 leading-relaxed">
+                            {post.excerpt}
+                          </p>
+                        )}
+
+                        {/* Full Content */}
+                        <div 
+                          className="prose prose-lg max-w-none dark:prose-invert"
+                          dangerouslySetInnerHTML={{ __html: post.content }}
+                        />
+
+                        {/* Additional Images */}
+                        {post.additional_images && post.additional_images.length > 0 && (
+                          <div className="mt-8 pt-6 border-t">
+                            <h4 className="font-semibold mb-4">Additional Images</h4>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                              {post.additional_images.map((img, i) => (
+                                <img 
+                                  key={i} 
+                                  src={img} 
+                                  alt={`Additional ${i + 1}`} 
+                                  className="w-full h-32 object-cover rounded-lg"
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </>
                   )}
-
-                  {/* Meta Info */}
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6 pb-6 border-b">
-                    <span className="flex items-center gap-2">
-                      <Calendar size={16} />
-                      {post.publication_date 
-                        ? format(new Date(post.publication_date), 'MMMM d, yyyy')
-                        : format(new Date(post.created_at), 'MMMM d, yyyy')}
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <User size={16} />
-                      {post.author_name}
-                    </span>
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {post.tags.map((tag, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">{tag}</Badge>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Excerpt */}
-                  {post.excerpt && (
-                    <p className="text-lg text-muted-foreground italic mb-6 leading-relaxed">
-                      {post.excerpt}
-                    </p>
-                  )}
-
-                  {/* Full Content */}
-                  <div 
-                    className="prose prose-lg max-w-none dark:prose-invert"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                  />
-
-                  {/* Additional Images */}
-                  {post.additional_images && post.additional_images.length > 0 && (
-                    <div className="mt-8 pt-6 border-t">
-                      <h4 className="font-semibold mb-4">Additional Images</h4>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {post.additional_images.map((img, i) => (
-                          <img 
-                            key={i} 
-                            src={img} 
-                            alt={`Additional ${i + 1}`} 
-                            className="w-full h-32 object-cover rounded-lg"
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         )}
 
