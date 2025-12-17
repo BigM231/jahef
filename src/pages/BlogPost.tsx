@@ -27,6 +27,13 @@ import {
   getCategoryColor 
 } from '@/hooks/useBlogPosts';
 import { format } from 'date-fns';
+import blogPlaceholder from '@/assets/blog-placeholder.jpg';
+
+// Extract first image URL from HTML content
+const extractFirstImageUrl = (content: string): string | null => {
+  const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return imgMatch ? imgMatch[1] : null;
+};
 
 export default function BlogPost() {
   const { slug } = useParams();
@@ -106,17 +113,21 @@ export default function BlogPost() {
       <Navigation />
       
       <main className="flex-grow">
-        {/* Featured Image */}
-        {post.featured_image_url && (
-          <div className="w-full h-64 md:h-96 lg:h-[500px] relative">
-            <img
-              src={post.featured_image_url}
-              alt={post.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-          </div>
-        )}
+        {/* Featured Image - with fallback logic */}
+        {(() => {
+          const inlineImageUrl = extractFirstImageUrl(post.content);
+          const heroImageUrl = post.featured_image_url || inlineImageUrl || blogPlaceholder;
+          return (
+            <div className="w-full h-64 md:h-96 lg:h-[500px] relative">
+              <img
+                src={heroImageUrl}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+            </div>
+          );
+        })()}
 
         <article className="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
           {/* Back Button */}
@@ -245,19 +256,20 @@ export default function BlogPost() {
                   More from "{post.series_name}"
                 </h3>
                 <div className="space-y-3">
-                  {seriesPosts.map((seriesPost) => (
+                  {seriesPosts.map((seriesPost) => {
+                    const seriesInlineImage = extractFirstImageUrl(seriesPost.content);
+                    const seriesThumbnail = seriesPost.featured_image_url || seriesInlineImage || blogPlaceholder;
+                    return (
                     <Link 
                       key={seriesPost.id}
                       to={`/blog/${seriesPost.slug}`}
                       className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors"
                     >
-                      {seriesPost.featured_image_url && (
-                        <img
-                          src={seriesPost.featured_image_url}
-                          alt={seriesPost.title}
-                          className="w-16 h-12 object-cover rounded"
-                        />
-                      )}
+                      <img
+                        src={seriesThumbnail}
+                        alt={seriesPost.title}
+                        className="w-16 h-12 object-cover rounded"
+                      />
                       <div className="flex-1">
                         <Badge variant="outline" className="text-xs mb-1">
                           Part {seriesPost.series_part}
@@ -268,7 +280,8 @@ export default function BlogPost() {
                       </div>
                       <ArrowRight className="h-4 w-4 text-muted-foreground" />
                     </Link>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
