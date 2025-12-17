@@ -3,13 +3,6 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   Table,
   TableBody,
   TableCell,
@@ -28,7 +21,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Search, Edit, Trash2, Eye, ArrowUpDown, FileText, RotateCcw } from 'lucide-react';
-import { useAllPosts, useDeletePost, BlogPostStatus, getCategoryLabel, getCategoryColor, BlogPost } from '@/hooks/useBlogPosts';
+import { useAllPosts, useDeletePost, BlogPostStatus, getCategoryLabel, getCategoryColor } from '@/hooks/useBlogPosts';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -38,32 +31,40 @@ import { useQueryClient } from '@tanstack/react-query';
 interface BlogPostsListProps {
   onEdit: (id: string) => void;
   onCreateNew: () => void;
-  showTrash?: boolean;
+  filterStatus: 'all' | 'published' | 'draft' | 'scheduled' | 'trash';
 }
 
-export default function BlogPostsList({ onEdit, onCreateNew, showTrash = false }: BlogPostsListProps) {
-  const [statusFilter, setStatusFilter] = useState<BlogPostStatus | 'all'>('all');
+export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: BlogPostsListProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [deletePostId, setDeletePostId] = useState<string | null>(null);
   const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
   const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
 
-  const { data: posts, isLoading } = useAllPosts(statusFilter, searchQuery);
+  const { data: posts, isLoading } = useAllPosts('all', searchQuery);
   const deletePost = useDeletePost();
   const queryClient = useQueryClient();
 
-  // Filter posts based on trash view
+  const isTrashView = filterStatus === 'trash';
+
+  // Filter posts based on status
   const filteredPosts = posts?.filter(post => {
-    if (showTrash) {
+    if (filterStatus === 'trash') {
       return post.deleted_at !== null || post.status === 'trash';
     }
-    return post.deleted_at === null && post.status !== 'trash';
+    if (filterStatus === 'all') {
+      return post.deleted_at === null && post.status !== 'trash';
+    }
+    return post.deleted_at === null && post.status === filterStatus;
   });
 
   const handleDelete = async () => {
     if (deletePostId) {
-      await deletePost.mutateAsync(deletePostId);
+      if (isTrashView) {
+        await handlePermanentDelete(deletePostId);
+      } else {
+        await deletePost.mutateAsync(deletePostId);
+      }
       setDeletePostId(null);
     }
   };
@@ -170,6 +171,21 @@ export default function BlogPostsList({ onEdit, onCreateNew, showTrash = false }
     }
   };
 
+  const getEmptyMessage = () => {
+    switch (filterStatus) {
+      case 'published':
+        return 'No published posts yet. Published posts will appear on the /news page.';
+      case 'draft':
+        return 'No draft posts';
+      case 'scheduled':
+        return 'No scheduled posts';
+      case 'trash':
+        return 'Trash is empty';
+      default:
+        return 'No blog posts found';
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Actions Bar */}
@@ -184,20 +200,6 @@ export default function BlogPostsList({ onEdit, onCreateNew, showTrash = false }
               className="pl-10"
             />
           </div>
-
-          {!showTrash && (
-            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Filter status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Posts</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-                <SelectItem value="draft">Drafts</SelectItem>
-                <SelectItem value="scheduled">Scheduled</SelectItem>
-              </SelectContent>
-            </Select>
-          )}
 
           <Button
             variant="outline"
@@ -214,7 +216,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, showTrash = false }
             <span className="text-sm text-muted-foreground">
               {selectedPosts.length} selected
             </span>
-            {showTrash ? (
+            {isTrashView ? (
               <Button variant="outline" size="sm" onClick={handleBulkRestore}>
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Restore Selected
@@ -240,10 +242,10 @@ export default function BlogPostsList({ onEdit, onCreateNew, showTrash = false }
         ) : sortedPosts?.length === 0 ? (
           <div className="p-8 text-center">
             <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <p className="text-muted-foreground mb-4">
-              {showTrash ? 'No posts in trash' : 'No blog posts found'}
-            </p>
-            {!showTrash && <Button onClick={onCreateNew}>Create Your First Post</Button>}
+            <p className="text-muted-foreground mb-4">{getEmptyMessage()}</p>
+            {filterStatus !== 'trash' && (
+              <Button onClick={onCreateNew}>Create New Post</Button>
+            )}
           </div>
         ) : (
           <Table>
@@ -303,7 +305,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, showTrash = false }
                   <TableCell>{getStatusBadge(post.status)}</TableCell>
                   <TableCell>
                     <div className="flex items-center justify-end gap-2">
-                      {showTrash ? (
+                      {isTrashView ? (
                         <>
                           <Button
                             variant="ghost"
@@ -368,7 +370,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, showTrash = false }
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              {showTrash 
+              {isTrashView 
                 ? 'This post will be permanently deleted. This action cannot be undone.'
                 : 'This post will be moved to trash. You can recover it within 30 days.'}
             </AlertDialogDescription>
@@ -376,7 +378,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, showTrash = false }
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction 
-              onClick={() => showTrash ? handlePermanentDelete(deletePostId!) : handleDelete()} 
+              onClick={handleDelete} 
               className="bg-destructive hover:bg-destructive/90"
             >
               Delete
