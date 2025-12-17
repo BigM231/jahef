@@ -131,7 +131,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
     all: 'No blog posts found',
   }[filterStatus]);
 
-  // Published View - Card Layout like /news
+  // Published View - Full Article Layout like /news page
   if (isPublishedView) {
     return (
       <div className="space-y-6">
@@ -154,39 +154,157 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
           )}
         </div>
 
-        {isLoading ? <div className="p-8 text-center text-muted-foreground">Loading...</div> : sortedPosts?.length === 0 ? (
-          <div className="p-8 text-center"><FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" /><p className="text-muted-foreground mb-4">{getEmptyMessage()}</p><Button onClick={onCreateNew}>Create Post</Button></div>
+        {isLoading ? (
+          <div className="p-8 text-center text-muted-foreground">Loading...</div>
+        ) : sortedPosts?.length === 0 ? (
+          <div className="p-8 text-center">
+            <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <p className="text-muted-foreground mb-4">{getEmptyMessage()}</p>
+            <Button onClick={onCreateNew}>Create Post</Button>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-8">
             {sortedPosts?.map((post) => (
-              <Card key={post.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-none shadow-lg rounded-2xl relative">
-                <div className="absolute top-4 right-4 z-10"><Checkbox checked={selectedPosts.includes(post.id)} onCheckedChange={() => toggleSelectPost(post.id)} className="bg-white/80 border-2" /></div>
-                <div className="relative h-48 overflow-hidden">
-                  {post.featured_image_url ? <img src={post.featured_image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" /> : <div className="w-full h-full bg-muted flex items-center justify-center"><FileText className="h-12 w-12 text-muted-foreground" /></div>}
-                  <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/40" />
-                  <div className="absolute top-4 left-4"><Badge className={`${getCategoryColor(post.category)} text-white`}>{getCategoryLabel(post.category)}</Badge></div>
+              <article key={post.id} className="bg-card rounded-2xl shadow-lg overflow-hidden border">
+                {/* Admin Actions Bar */}
+                <div className="bg-muted/50 px-6 py-3 flex items-center justify-between border-b">
+                  <div className="flex items-center gap-3">
+                    <Checkbox 
+                      checked={selectedPosts.includes(post.id)} 
+                      onCheckedChange={() => toggleSelectPost(post.id)} 
+                    />
+                    <Badge className="bg-green-500 hover:bg-green-600">Live on /news</Badge>
+                    <span className="text-sm text-muted-foreground flex items-center gap-1">
+                      <Eye size={14} /> {post.view_count || 0} views
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" onClick={() => onEdit(post.id)}>
+                      <Edit className="h-4 w-4 mr-2" />Edit
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={() => handleUnpublish(post.id)}>
+                      <EyeOff className="h-4 w-4 mr-2" />Unpublish
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={() => setDeletePostId(post.id)}>
+                      <Trash2 className="h-4 w-4 mr-2" />Delete
+                    </Button>
+                  </div>
                 </div>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                    <span className="flex items-center gap-1"><Calendar size={14} />{post.publication_date ? format(new Date(post.publication_date), 'MMM d, yyyy') : '-'}</span>
-                    <span className="flex items-center gap-1"><User size={14} />{post.author_name}</span>
+
+                {/* Featured Image */}
+                {post.featured_image_url && (
+                  <div className="relative h-64 md:h-80 overflow-hidden">
+                    <img 
+                      src={post.featured_image_url} 
+                      alt={post.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <Badge className={`${getCategoryColor(post.category)} text-white mb-3`}>
+                        {getCategoryLabel(post.category)}
+                      </Badge>
+                      <h2 className="font-heading font-bold text-2xl md:text-3xl text-white">
+                        {post.title}
+                      </h2>
+                    </div>
                   </div>
-                  <h3 className="font-heading font-bold text-xl mb-3 group-hover:text-primary transition-colors line-clamp-2">{post.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-3">{post.excerpt || post.content.replace(/<[^>]*>/g, '').substring(0, 150)}</p>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground mb-4"><Eye size={14} />{post.view_count || 0} views</div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button variant="outline" size="sm" onClick={() => window.open(`/blog/${post.slug}`, '_blank')}><Eye className="h-4 w-4 mr-1" />View</Button>
-                    <Button variant="outline" size="sm" onClick={() => onEdit(post.id)}><Edit className="h-4 w-4 mr-1" />Edit</Button>
-                    <Button variant="secondary" size="sm" onClick={() => handleUnpublish(post.id)}><EyeOff className="h-4 w-4 mr-1" />Unpublish</Button>
-                    <Button variant="destructive" size="sm" onClick={() => setDeletePostId(post.id)}><Trash2 className="h-4 w-4" /></Button>
+                )}
+
+                {/* Content */}
+                <div className="p-6 md:p-8">
+                  {!post.featured_image_url && (
+                    <>
+                      <Badge className={`${getCategoryColor(post.category)} text-white mb-3`}>
+                        {getCategoryLabel(post.category)}
+                      </Badge>
+                      <h2 className="font-heading font-bold text-2xl md:text-3xl mb-4">
+                        {post.title}
+                      </h2>
+                    </>
+                  )}
+
+                  {/* Meta Info */}
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6 pb-6 border-b">
+                    <span className="flex items-center gap-2">
+                      <Calendar size={16} />
+                      {post.publication_date 
+                        ? format(new Date(post.publication_date), 'MMMM d, yyyy')
+                        : format(new Date(post.created_at), 'MMMM d, yyyy')}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <User size={16} />
+                      {post.author_name}
+                    </span>
+                    {post.tags && post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {post.tags.map((tag, i) => (
+                          <Badge key={i} variant="outline" className="text-xs">{tag}</Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
+
+                  {/* Excerpt */}
+                  {post.excerpt && (
+                    <p className="text-lg text-muted-foreground italic mb-6 leading-relaxed">
+                      {post.excerpt}
+                    </p>
+                  )}
+
+                  {/* Full Content */}
+                  <div 
+                    className="prose prose-lg max-w-none dark:prose-invert"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                  />
+
+                  {/* Additional Images */}
+                  {post.additional_images && post.additional_images.length > 0 && (
+                    <div className="mt-8 pt-6 border-t">
+                      <h4 className="font-semibold mb-4">Additional Images</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {post.additional_images.map((img, i) => (
+                          <img 
+                            key={i} 
+                            src={img} 
+                            alt={`Additional ${i + 1}`} 
+                            className="w-full h-32 object-cover rounded-lg"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </article>
             ))}
           </div>
         )}
-        <AlertDialog open={!!deletePostId} onOpenChange={() => setDeletePostId(null)}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete post?</AlertDialogTitle><AlertDialogDescription>This post will be moved to trash and removed from /news.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
-        <AlertDialog open={showBulkDeleteDialog} onOpenChange={setShowBulkDeleteDialog}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete {selectedPosts.length} posts?</AlertDialogTitle><AlertDialogDescription>These posts will be moved to trash.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleBulkDelete} className="bg-destructive hover:bg-destructive/90">Delete All</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+
+        <AlertDialog open={!!deletePostId} onOpenChange={() => setDeletePostId(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete post?</AlertDialogTitle>
+              <AlertDialogDescription>This post will be moved to trash and removed from /news.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        
+        <AlertDialog open={showBulkDeleteDialog} onOpenChange={setShowBulkDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete {selectedPosts.length} posts?</AlertDialogTitle>
+              <AlertDialogDescription>These posts will be moved to trash.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleBulkDelete} className="bg-destructive hover:bg-destructive/90">Delete All</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     );
   }
