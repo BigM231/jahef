@@ -7,11 +7,11 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import Programs from "./pages/Programs";
 import Gallery from "./pages/Gallery";
+import News from "./pages/News";
 import Contact from "./pages/Contact";
 import Donate from "./pages/Donate";
 import Auth from "./pages/Auth";
 import UploadMedia from "./pages/UploadMedia";
-import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogAdmin from "./pages/BlogAdmin";
 import BlogForm from "./pages/BlogForm";
@@ -30,12 +30,12 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/news" element={<Navigate to="/blog" replace />} />
+          <Route path="/news" element={<News />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/upload" element={<UploadMedia />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog" element={<Navigate to="/news" replace />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/admin/blog" element={<BlogAdmin />} />
           <Route path="/admin/blog/new" element={<BlogForm />} />
