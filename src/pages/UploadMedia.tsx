@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Upload, X } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -22,6 +23,7 @@ export default function UploadMedia() {
   const [mediaType, setMediaType] = useState<"image" | "video">("image");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Generate preview URL when file changes
   useEffect(() => {
@@ -83,6 +85,44 @@ export default function UploadMedia() {
     }
   };
 
+  // Upload file with progress tracking
+  const uploadFileWithProgress = (
+    bucketName: string,
+    filePath: string,
+    file: File,
+    token: string
+  ): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const url = `${supabaseUrl}/storage/v1/object/${bucketName}/${filePath}`;
+
+      xhr.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded / event.total) * 100);
+          setUploadProgress(percent);
+        }
+      });
+
+      xhr.addEventListener("load", () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+        } else {
+          reject(new Error(`Upload failed with status ${xhr.status}`));
+        }
+      });
+
+      xhr.addEventListener("error", () => {
+        reject(new Error("Upload failed"));
+      });
+
+      xhr.open("POST", url);
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      xhr.setRequestHeader("x-upsert", "true");
+      xhr.send(file);
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -92,8 +132,13 @@ export default function UploadMedia() {
     }
 
     setIsLoading(true);
+    setUploadProgress(0);
 
     try {
+      // Get session token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
       // Use the selected media type
       const bucketName = mediaType === "image" ? "gallery-images" : "gallery-videos";
       
@@ -102,12 +147,8 @@ export default function UploadMedia() {
       const fileExt = file.name.split(".").pop();
       const filePath = `${user.id}/${timestamp}.${fileExt}`;
 
-      // Upload file to storage
-      const { error: uploadError } = await supabase.storage
-        .from(bucketName)
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
+      // Upload file with progress tracking
+      await uploadFileWithProgress(bucketName, filePath, file, session.access_token);
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
@@ -138,12 +179,14 @@ export default function UploadMedia() {
       setMediaType("image");
       setFile(null);
       setPreviewUrl(null);
+      setUploadProgress(0);
       (document.getElementById("file-input") as HTMLInputElement).value = "";
       
       // Navigate to gallery after a delay
       setTimeout(() => navigate("/gallery"), 1500);
     } catch (error: any) {
       toast.error(error.message || "Failed to upload media");
+      setUploadProgress(0);
     } finally {
       setIsLoading(false);
     }
@@ -289,8 +332,19 @@ export default function UploadMedia() {
                   </Select>
                 </div>
 
+                {/* Upload Progress */}
+                {isLoading && uploadProgress > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Uploading...</span>
+                      <span className="font-medium">{uploadProgress}%</span>
+                    </div>
+                    <Progress value={uploadProgress} className="h-2" />
+                  </div>
+                )}
+
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Uploading..." : "Upload Media"}
+                  {isLoading ? `Uploading... ${uploadProgress}%` : "Upload Media"}
                 </Button>
               </form>
             </CardContent>
