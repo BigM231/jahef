@@ -24,7 +24,7 @@ import {
 import { Search, Edit, Trash2, Eye, ArrowUpDown, FileText, RotateCcw, Calendar, User, EyeOff, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { useAllPosts, useDeletePost, BlogPostStatus, getCategoryLabel, getCategoryColor } from '@/hooks/useBlogPosts';
 import { format } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
@@ -42,6 +42,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
   const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
   const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
   const [expandedPosts, setExpandedPosts] = useState<string[]>([]);
+  const [hasInitializedExpanded, setHasInitializedExpanded] = useState(false);
 
   const { data: posts, isLoading } = useAllPosts('all', searchQuery);
   const deletePost = useDeletePost();
@@ -117,6 +118,15 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
   const toggleExpandPost = (id: string) => setExpandedPosts(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
   const expandAll = () => setExpandedPosts(sortedPosts?.map(p => p.id) || []);
   const collapseAll = () => setExpandedPosts([]);
+
+  // Ensure admins can read published posts here without needing to open the public /news page.
+  useEffect(() => {
+    if (!isPublishedView) return;
+    if (hasInitializedExpanded) return;
+    if (!sortedPosts || sortedPosts.length === 0) return;
+    setExpandedPosts(sortedPosts.map(p => p.id));
+    setHasInitializedExpanded(true);
+  }, [isPublishedView, hasInitializedExpanded, sortedPosts]);
 
   const getStatusBadge = (status: BlogPostStatus) => {
     const badges: Record<string, JSX.Element> = {
