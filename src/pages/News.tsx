@@ -147,13 +147,13 @@ const News = () => {
                     key={post.id} 
                     className={`group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-none shadow-lg rounded-2xl ${post.is_featured ? 'ring-2 ring-secondary' : ''}`}
                   >
-                    <div className="relative h-48 sm:h-52 md:h-48 lg:h-52 overflow-hidden">
+                    <div className="relative h-48 sm:h-52 md:h-48 lg:h-52 overflow-hidden bg-muted/20">
                       <img
                         src={post.featured_image_url || blogPlaceholder}
                         alt={post.title}
-                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/40" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-black/30" />
                       <div className="absolute top-4 left-4 flex gap-2">
                         {post.is_featured && (
                           <Badge className="bg-secondary text-white flex items-center gap-1">

@@ -118,13 +118,13 @@ export default function BlogPost() {
           const inlineImageUrl = extractFirstImageUrl(post.content);
           const heroImageUrl = post.featured_image_url || inlineImageUrl || blogPlaceholder;
           return (
-            <div className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] relative">
+            <div className="w-full h-72 sm:h-96 md:h-[450px] lg:h-[550px] relative bg-gradient-to-b from-muted/50 to-muted/20 flex items-center justify-center">
               <img
                 src={heroImageUrl}
                 alt={post.title}
-                className="w-full h-full object-cover object-center"
+                className="max-w-full max-h-full object-contain"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
             </div>
           );
         })()}
