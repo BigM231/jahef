@@ -4,42 +4,30 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogOut, FileText, ArrowLeft, Plus, List, Trash2, Globe, FileEdit, Clock } from 'lucide-react';
+import { toast } from 'sonner';
+import { useAdminStatus } from '@/hooks/useAdminStatus';
 import BlogPostsList from '@/components/admin/BlogPostsList';
 import BlogPostForm from '@/components/admin/BlogPostForm';
 type AdminView = 'list' | 'create' | 'edit';
 export default function BlogAdmin() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const { user, isAdmin, loading } = useAdminStatus();
   const [currentView, setCurrentView] = useState<AdminView>('list');
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
   useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: {
-          session
-        }
-      } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/auth');
-        return;
-      }
-      setUser(session.user);
-    };
-    checkAuth();
-    const {
-      data: {
-        subscription
-      }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate('/auth');
-      } else {
-        setUser(session.user);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    if (loading) return;
+
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+
+    if (!isAdmin) {
+      toast.error('Access denied: Admin privileges required');
+      navigate('/');
+    }
+  }, [loading, user, isAdmin, navigate]);
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/');
@@ -56,7 +44,11 @@ export default function BlogAdmin() {
     setCurrentView('list');
     setEditingPostId(null);
   };
-  if (!user) {
+  if (loading) {
+    return null;
+  }
+
+  if (!user || !isAdmin) {
     return null;
   }
   const showForm = currentView === 'create' || currentView === 'edit';
