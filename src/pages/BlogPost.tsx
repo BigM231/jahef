@@ -91,9 +91,9 @@ export default function BlogPost() {
           <p className="text-muted-foreground mb-6">
             The article you're looking for doesn't exist or has been removed.
           </p>
-          <Button onClick={() => navigate('/blog')}>
+          <Button onClick={() => navigate('/news')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Blog
+            Back to News
           </Button>
         </main>
         <Footer />
@@ -122,11 +122,11 @@ export default function BlogPost() {
           {/* Back Button */}
           <Button
             variant="ghost"
-            onClick={() => navigate('/blog')}
+            onClick={() => navigate('/news')}
             className="mb-6"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Blog
+            Back to News
           </Button>
 
           {/* Series Badge */}
@@ -288,7 +288,7 @@ export default function BlogPost() {
             )}
             
             <Button variant="outline" asChild>
-              <Link to="/blog">
+              <Link to="/news">
                 View All Posts
               </Link>
             </Button>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Heart,
   GraduationCap,
@@ -190,18 +191,18 @@ const Programs = () => {
             more people in need
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/donate"
+            <Link
+              to="/donate"
               className="inline-flex items-center justify-center px-8 py-3 bg-gradient-hero text-white font-secondary font-bold text-lg rounded-full hover:opacity-90 transition-opacity"
             >
               Make a Donation
-            </a>
-            <a
-              href="/contact"
+            </Link>
+            <Link
+              to="/contact"
               className="inline-flex items-center justify-center px-8 py-3 border-2 border-primary text-primary font-secondary font-bold text-lg rounded-full hover:bg-primary hover:text-white transition-colors"
             >
               Partner With Us
-            </a>
+            </Link>
           </div>
         </div>
       </section>
