@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, ArrowRight, Search, User, FileText, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, ArrowRight, Search, User, FileText, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -157,7 +157,7 @@ const News = () => {
                 {paginatedPosts.map((post) => (
                   <Card 
                     key={post.id} 
-                    className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-none shadow-lg rounded-2xl"
+                    className={`group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-none shadow-lg rounded-2xl ${post.is_featured ? 'ring-2 ring-secondary' : ''}`}
                   >
                     <div className="relative h-48 overflow-hidden">
                       <img
@@ -166,7 +166,13 @@ const News = () => {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/40" />
-                      <div className="absolute top-4 left-4">
+                      <div className="absolute top-4 left-4 flex gap-2">
+                        {post.is_featured && (
+                          <Badge className="bg-secondary text-white flex items-center gap-1">
+                            <Star className="h-3 w-3 fill-current" />
+                            Featured
+                          </Badge>
+                        )}
                         <Badge className={`${getCategoryColor(post.category)} text-white`}>
                           {getCategoryLabel(post.category)}
                         </Badge>
