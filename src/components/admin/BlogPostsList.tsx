@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Search, Edit, Trash2, Eye, ArrowUpDown, FileText, RotateCcw, Calendar, User } from 'lucide-react';
+import { Search, Edit, Trash2, Eye, ArrowUpDown, FileText, RotateCcw, Calendar, User, EyeOff } from 'lucide-react';
 import { useAllPosts, useDeletePost, BlogPostStatus, getCategoryLabel, getCategoryColor } from '@/hooks/useBlogPosts';
 import { format } from 'date-fns';
 import { useState } from 'react';
@@ -80,6 +80,21 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
     toast.success('Post restored');
   };
 
+  const handleUnpublish = async (id: string) => {
+    await supabase.from('blog_posts').update({ status: 'draft' as BlogPostStatus }).eq('id', id);
+    queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
+    toast.success('Post unpublished - moved to drafts');
+  };
+
+  const handleBulkUnpublish = async () => {
+    for (const id of selectedPosts) {
+      await supabase.from('blog_posts').update({ status: 'draft' as BlogPostStatus }).eq('id', id);
+    }
+    queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
+    toast.success(`${selectedPosts.length} posts unpublished`);
+    setSelectedPosts([]);
+  };
+
   const handleBulkRestore = async () => {
     for (const id of selectedPosts) {
       await supabase.from('blog_posts').update({ status: 'draft' as BlogPostStatus, deleted_at: null }).eq('id', id);
@@ -133,6 +148,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
           {selectedPosts.length > 0 && (
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">{selectedPosts.length} selected</span>
+              <Button variant="secondary" size="sm" onClick={handleBulkUnpublish}><EyeOff className="h-4 w-4 mr-2" />Unpublish</Button>
               <Button variant="destructive" size="sm" onClick={() => setShowBulkDeleteDialog(true)}><Trash2 className="h-4 w-4 mr-2" />Delete</Button>
             </div>
           )}
@@ -158,9 +174,10 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
                   <h3 className="font-heading font-bold text-xl mb-3 group-hover:text-primary transition-colors line-clamp-2">{post.title}</h3>
                   <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-3">{post.excerpt || post.content.replace(/<[^>]*>/g, '').substring(0, 150)}</p>
                   <div className="flex items-center gap-1 text-sm text-muted-foreground mb-4"><Eye size={14} />{post.view_count || 0} views</div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="flex-1" onClick={() => window.open(`/blog/${post.slug}`, '_blank')}><Eye className="h-4 w-4 mr-2" />View</Button>
-                    <Button variant="outline" size="sm" className="flex-1" onClick={() => onEdit(post.id)}><Edit className="h-4 w-4 mr-2" />Edit</Button>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" onClick={() => window.open(`/blog/${post.slug}`, '_blank')}><Eye className="h-4 w-4 mr-1" />View</Button>
+                    <Button variant="outline" size="sm" onClick={() => onEdit(post.id)}><Edit className="h-4 w-4 mr-1" />Edit</Button>
+                    <Button variant="secondary" size="sm" onClick={() => handleUnpublish(post.id)}><EyeOff className="h-4 w-4 mr-1" />Unpublish</Button>
                     <Button variant="destructive" size="sm" onClick={() => setDeletePostId(post.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </CardContent>
