@@ -3,18 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, FileText, ArrowLeft, Plus, List, Trash2 } from 'lucide-react';
+import { LogOut, FileText, ArrowLeft, Plus, List, Trash2, Globe, FileEdit, Clock } from 'lucide-react';
 import BlogPostsList from '@/components/admin/BlogPostsList';
 import BlogPostForm from '@/components/admin/BlogPostForm';
 
-type AdminView = 'list' | 'trash' | 'create' | 'edit';
+type AdminView = 'list' | 'create' | 'edit';
 
 export default function BlogAdmin() {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [currentView, setCurrentView] = useState<AdminView>('list');
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('posts');
+  const [activeTab, setActiveTab] = useState('all');
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -104,10 +104,22 @@ export default function BlogAdmin() {
           <div className="space-y-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6">
-                <TabsList>
-                  <TabsTrigger value="posts" className="gap-2">
+                <TabsList className="flex-wrap h-auto gap-1">
+                  <TabsTrigger value="all" className="gap-2">
                     <List className="h-4 w-4" />
                     All Posts
+                  </TabsTrigger>
+                  <TabsTrigger value="published" className="gap-2">
+                    <Globe className="h-4 w-4" />
+                    Published
+                  </TabsTrigger>
+                  <TabsTrigger value="draft" className="gap-2">
+                    <FileEdit className="h-4 w-4" />
+                    Drafts
+                  </TabsTrigger>
+                  <TabsTrigger value="scheduled" className="gap-2">
+                    <Clock className="h-4 w-4" />
+                    Scheduled
                   </TabsTrigger>
                   <TabsTrigger value="trash" className="gap-2">
                     <Trash2 className="h-4 w-4" />
@@ -120,11 +132,41 @@ export default function BlogAdmin() {
                 </Button>
               </div>
               
-              <TabsContent value="posts">
+              <TabsContent value="all">
                 <BlogPostsList 
                   onEdit={handleEdit} 
                   onCreateNew={handleCreateNew}
-                  showTrash={false}
+                  filterStatus="all"
+                />
+              </TabsContent>
+              
+              <TabsContent value="published">
+                <div className="mb-4 p-4 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg">
+                  <p className="text-sm text-green-700 dark:text-green-400 flex items-center gap-2">
+                    <Globe className="h-4 w-4" />
+                    These posts are live on the <a href="/news" target="_blank" className="underline font-medium">/news</a> page
+                  </p>
+                </div>
+                <BlogPostsList 
+                  onEdit={handleEdit} 
+                  onCreateNew={handleCreateNew}
+                  filterStatus="published"
+                />
+              </TabsContent>
+              
+              <TabsContent value="draft">
+                <BlogPostsList 
+                  onEdit={handleEdit} 
+                  onCreateNew={handleCreateNew}
+                  filterStatus="draft"
+                />
+              </TabsContent>
+              
+              <TabsContent value="scheduled">
+                <BlogPostsList 
+                  onEdit={handleEdit} 
+                  onCreateNew={handleCreateNew}
+                  filterStatus="scheduled"
                 />
               </TabsContent>
               
@@ -132,7 +174,7 @@ export default function BlogAdmin() {
                 <BlogPostsList 
                   onEdit={handleEdit} 
                   onCreateNew={handleCreateNew}
-                  showTrash={true}
+                  filterStatus="trash"
                 />
               </TabsContent>
             </Tabs>
