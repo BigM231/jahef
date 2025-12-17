@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, ArrowRight, Search, User, FileText } from "lucide-react";
+import { Calendar, ArrowRight, Search, User, FileText, ChevronLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +37,8 @@ const FALLBACK_IMAGES: Record<BlogCategory, string> = {
   case_studies: schoolVisitImg,
 };
 
+const POSTS_PER_PAGE = 6;
+
 const CATEGORIES: { value: BlogCategory | 'all'; label: string }[] = [
   { value: 'all', label: 'All Categories' },
   { value: 'success_stories', label: 'Success Stories' },
@@ -49,11 +51,35 @@ const CATEGORIES: { value: BlogCategory | 'all'; label: string }[] = [
 const News = () => {
   const [category, setCategory] = useState<BlogCategory | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: posts, isLoading } = usePublishedPosts(
     category === 'all' ? undefined : category,
     searchQuery || undefined
   );
+
+  // Reset to page 1 when filters change
+  const handleCategoryChange = (value: string) => {
+    setCategory(value as BlogCategory | 'all');
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // Pagination calculations
+  const totalPosts = posts?.length || 0;
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const paginatedPosts = posts?.slice(startIndex, endIndex) || [];
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -81,12 +107,12 @@ const News = () => {
               <Input
                 placeholder="Search articles..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="pl-10"
               />
             </div>
             
-            <Select value={category} onValueChange={(v) => setCategory(v as any)}>
+            <Select value={category} onValueChange={handleCategoryChange}>
               <SelectTrigger className="w-full md:w-[200px]">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
@@ -124,11 +150,11 @@ const News = () => {
               <h2 className="font-heading font-bold text-2xl md:text-3xl text-primary mb-8">
                 {category === 'all' ? 'All News & Events' : getCategoryLabel(category as BlogCategory)}
                 <span className="text-muted-foreground text-lg font-normal ml-2">
-                  ({posts.length} {posts.length === 1 ? 'article' : 'articles'})
+                  ({totalPosts} {totalPosts === 1 ? 'article' : 'articles'})
                 </span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {posts.map((post) => (
+                {paginatedPosts.map((post) => (
                   <Card 
                     key={post.id} 
                     className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-none shadow-lg rounded-2xl"
@@ -174,6 +200,48 @@ const News = () => {
                   </Card>
                 ))}
               </div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-12">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="icon"
+                      onClick={() => goToPage(page)}
+                      className={currentPage === page ? "bg-gradient-hero text-white" : ""}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                  
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+
+              {/* Page Info */}
+              {totalPages > 1 && (
+                <p className="text-center text-muted-foreground mt-4">
+                  Showing {startIndex + 1}-{Math.min(endIndex, totalPosts)} of {totalPosts} articles
+                </p>
+              )}
             </>
           )}
         </div>
