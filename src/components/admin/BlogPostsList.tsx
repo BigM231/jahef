@@ -198,8 +198,12 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
                         onCheckedChange={() => toggleSelectPost(post.id)}
                         onClick={(e) => e.stopPropagation()}
                       />
-                      {post.featured_image_url && (
+                      {post.featured_image_url ? (
                         <img src={post.featured_image_url} alt="" className="w-12 h-12 object-cover rounded" />
+                      ) : (
+                        <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
+                          <FileText className="h-5 w-5 text-muted-foreground" />
+                        </div>
                       )}
                       <div className="flex flex-col">
                         <span className="font-semibold line-clamp-1">{post.title}</span>
