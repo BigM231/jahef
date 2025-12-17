@@ -51,12 +51,12 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`font-secondary font-semibold transition-colors ${
+                className={`font-secondary font-semibold transition-colors text-sm xl:text-base ${
                   isActive(item.path)
                     ? "text-primary"
                     : "text-foreground hover:text-primary"
@@ -88,9 +88,9 @@ const Navigation = () => {
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile & Tablet Menu Button */}
           <button
-            className="md:hidden p-2"
+            className="lg:hidden p-2"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -98,9 +98,9 @@ const Navigation = () => {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile & Tablet Navigation */}
         {isOpen && (
-          <div className="md:hidden py-4 border-t">
+          <div className="lg:hidden py-4 border-t animate-in slide-in-from-top-2 duration-200">
             {navItems.map((item) => (
               <Link
                 key={item.path}
