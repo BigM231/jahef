@@ -136,7 +136,7 @@ const Programs = () => {
                       <img
                         src={program.image}
                         alt={program.title}
-                        className="w-full h-full object-cover min-h-[300px]"
+                        className="w-full h-64 sm:h-80 md:h-full object-cover object-center min-h-[300px]"
                       />
                     </div>
                   )}

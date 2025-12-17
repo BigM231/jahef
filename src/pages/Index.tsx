@@ -71,7 +71,7 @@ const Index = () => {
               </div>
             </div>
             <div className="flex-1">
-              <img src={galleryImage1} alt="JAHEF community work" className="rounded-2xl shadow-2xl w-full" />
+              <img src={galleryImage1} alt="JAHEF community work" className="rounded-2xl shadow-2xl w-full h-64 sm:h-80 md:h-auto object-cover object-center" />
             </div>
           </div>
         </div>

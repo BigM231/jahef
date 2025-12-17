@@ -118,11 +118,11 @@ export default function BlogPost() {
           const inlineImageUrl = extractFirstImageUrl(post.content);
           const heroImageUrl = post.featured_image_url || inlineImageUrl || blogPlaceholder;
           return (
-            <div className="w-full h-64 md:h-96 lg:h-[500px] relative">
+            <div className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] relative">
               <img
                 src={heroImageUrl}
                 alt={post.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
             </div>
