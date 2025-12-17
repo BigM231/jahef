@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Upload } from "lucide-react";
+import { Upload, X } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -21,6 +21,18 @@ export default function UploadMedia() {
   const [category, setCategory] = useState("");
   const [mediaType, setMediaType] = useState<"image" | "video">("image");
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Generate preview URL when file changes
+  useEffect(() => {
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [file]);
 
   useEffect(() => {
     // Check authentication
@@ -125,6 +137,7 @@ export default function UploadMedia() {
       setCategory("");
       setMediaType("image");
       setFile(null);
+      setPreviewUrl(null);
       (document.getElementById("file-input") as HTMLInputElement).value = "";
       
       // Navigate to gallery after a delay
@@ -199,6 +212,42 @@ export default function UploadMedia() {
                       ? "Accepts images (JPG, PNG, etc.)" 
                       : "Accepts videos (MP4, etc.)"}
                   </p>
+                  
+                  {/* File Preview */}
+                  {previewUrl && file && (
+                    <div className="mt-4 relative">
+                      <Label className="mb-2 block">Preview</Label>
+                      <div className="relative inline-block rounded-lg overflow-hidden border border-border bg-muted">
+                        {mediaType === "image" ? (
+                          <img 
+                            src={previewUrl} 
+                            alt="Preview" 
+                            className="max-w-full max-h-64 object-contain"
+                          />
+                        ) : (
+                          <video 
+                            src={previewUrl} 
+                            controls 
+                            className="max-w-full max-h-64"
+                          />
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFile(null);
+                            const fileInput = document.getElementById("file-input") as HTMLInputElement;
+                            if (fileInput) fileInput.value = "";
+                          }}
+                          className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
