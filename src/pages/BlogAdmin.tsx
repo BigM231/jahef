@@ -6,67 +6,61 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogOut, FileText, ArrowLeft, Plus, List, Trash2, Globe, FileEdit, Clock } from 'lucide-react';
 import BlogPostsList from '@/components/admin/BlogPostsList';
 import BlogPostForm from '@/components/admin/BlogPostForm';
-
 type AdminView = 'list' | 'create' | 'edit';
-
 export default function BlogAdmin() {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [currentView, setCurrentView] = useState<AdminView>('list');
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
-
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: {
+          session
+        }
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate('/auth');
         return;
       }
       setUser(session.user);
     };
-
     checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: {
+        subscription
+      }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
         navigate('/auth');
       } else {
         setUser(session.user);
       }
     });
-
     return () => subscription.unsubscribe();
   }, [navigate]);
-
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/');
   };
-
   const handleEdit = (id: string) => {
     setEditingPostId(id);
     setCurrentView('edit');
   };
-
   const handleCreateNew = () => {
     setEditingPostId(null);
     setCurrentView('create');
   };
-
   const handleBackToList = () => {
     setCurrentView('list');
     setEditingPostId(null);
   };
-
   if (!user) {
     return null;
   }
-
   const showForm = currentView === 'create' || currentView === 'edit';
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
@@ -94,14 +88,7 @@ export default function BlogAdmin() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {showForm ? (
-          <BlogPostForm 
-            editId={editingPostId} 
-            onBack={handleBackToList} 
-            user={user} 
-          />
-        ) : (
-          <div className="space-y-6">
+        {showForm ? <BlogPostForm editId={editingPostId} onBack={handleBackToList} user={user} /> : <div className="space-y-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6">
                 <TabsList className="flex-wrap h-auto gap-1">
@@ -133,54 +120,27 @@ export default function BlogAdmin() {
               </div>
               
               <TabsContent value="all">
-                <BlogPostsList 
-                  onEdit={handleEdit} 
-                  onCreateNew={handleCreateNew}
-                  filterStatus="all"
-                />
+                <BlogPostsList onEdit={handleEdit} onCreateNew={handleCreateNew} filterStatus="all" />
               </TabsContent>
               
               <TabsContent value="published">
-                <div className="mb-4 p-4 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg">
-                  <p className="text-sm text-green-700 dark:text-green-400 flex items-center gap-2">
-                    <Globe className="h-4 w-4" />
-                    These posts are live on the <a href="/news" target="_blank" className="underline font-medium">/news</a> page
-                  </p>
-                </div>
-                <BlogPostsList 
-                  onEdit={handleEdit} 
-                  onCreateNew={handleCreateNew}
-                  filterStatus="published"
-                />
+                
+                <BlogPostsList onEdit={handleEdit} onCreateNew={handleCreateNew} filterStatus="published" />
               </TabsContent>
               
               <TabsContent value="draft">
-                <BlogPostsList 
-                  onEdit={handleEdit} 
-                  onCreateNew={handleCreateNew}
-                  filterStatus="draft"
-                />
+                <BlogPostsList onEdit={handleEdit} onCreateNew={handleCreateNew} filterStatus="draft" />
               </TabsContent>
               
               <TabsContent value="scheduled">
-                <BlogPostsList 
-                  onEdit={handleEdit} 
-                  onCreateNew={handleCreateNew}
-                  filterStatus="scheduled"
-                />
+                <BlogPostsList onEdit={handleEdit} onCreateNew={handleCreateNew} filterStatus="scheduled" />
               </TabsContent>
               
               <TabsContent value="trash">
-                <BlogPostsList 
-                  onEdit={handleEdit} 
-                  onCreateNew={handleCreateNew}
-                  filterStatus="trash"
-                />
+                <BlogPostsList onEdit={handleEdit} onCreateNew={handleCreateNew} filterStatus="trash" />
               </TabsContent>
             </Tabs>
-          </div>
-        )}
+          </div>}
       </main>
-    </div>
-  );
+    </div>;
 }
