@@ -19,6 +19,7 @@ export default function UploadMedia() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [mediaType, setMediaType] = useState<"image" | "video">("image");
   const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -56,8 +57,13 @@ export default function UploadMedia() {
       const isImage = selectedFile.type.startsWith("image/");
       const isVideo = selectedFile.type.startsWith("video/");
       
-      if (!isImage && !isVideo) {
-        toast.error("Please select an image or video file");
+      if (mediaType === "image" && !isImage) {
+        toast.error("Please select an image file (JPG, PNG, etc.)");
+        return;
+      }
+      
+      if (mediaType === "video" && !isVideo) {
+        toast.error("Please select a video file (MP4, etc.)");
         return;
       }
       
@@ -76,8 +82,7 @@ export default function UploadMedia() {
     setIsLoading(true);
 
     try {
-      // Determine media type
-      const mediaType = file.type.startsWith("image/") ? "image" : "video";
+      // Use the selected media type
       const bucketName = mediaType === "image" ? "gallery-images" : "gallery-videos";
       
       // Create file path with user ID and timestamp
@@ -118,6 +123,7 @@ export default function UploadMedia() {
       setTitle("");
       setDescription("");
       setCategory("");
+      setMediaType("image");
       setFile(null);
       (document.getElementById("file-input") as HTMLInputElement).value = "";
       
@@ -159,19 +165,39 @@ export default function UploadMedia() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
+                  <Label htmlFor="media-type">Media Type *</Label>
+                  <Select value={mediaType} onValueChange={(value: "image" | "video") => {
+                    setMediaType(value);
+                    setFile(null);
+                    const fileInput = document.getElementById("file-input") as HTMLInputElement;
+                    if (fileInput) fileInput.value = "";
+                  }}>
+                    <SelectTrigger id="media-type">
+                      <SelectValue placeholder="Select media type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="image">Photo</SelectItem>
+                      <SelectItem value="video">Video</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="file-input">Media File *</Label>
                   <div className="flex items-center gap-4">
                     <Input
                       id="file-input"
                       type="file"
-                      accept="image/*,video/*"
+                      accept={mediaType === "image" ? "image/*" : "video/*"}
                       onChange={handleFileChange}
                       required
                     />
                     <Upload className="w-5 h-5 text-muted-foreground" />
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Accepts images (JPG, PNG, etc.) and videos (MP4, etc.)
+                    {mediaType === "image" 
+                      ? "Accepts images (JPG, PNG, etc.)" 
+                      : "Accepts videos (MP4, etc.)"}
                   </p>
                 </div>
 
