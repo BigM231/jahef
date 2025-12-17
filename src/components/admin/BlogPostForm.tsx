@@ -173,10 +173,6 @@ export default function BlogPostForm({ editId, onBack, user }: BlogPostFormProps
       toast.error('Please enter content');
       return;
     }
-    if (!featuredImageUrl && !featuredImage) {
-      toast.error('Please upload a featured image');
-      return;
-    }
 
     setIsLoading(true);
 
@@ -412,7 +408,7 @@ export default function BlogPostForm({ editId, onBack, user }: BlogPostFormProps
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <ImageIcon className="h-4 w-4" />
-                Featured Image *
+                Featured Image
               </CardTitle>
             </CardHeader>
             <CardContent>
