@@ -30,6 +30,7 @@ export interface BlogPost {
   previous_post_id: string | null;
   next_post_id: string | null;
   view_count: number;
+  is_featured: boolean;
   deleted_at: string | null;
   created_at: string;
   updated_at: string;
@@ -56,6 +57,7 @@ export interface CreateBlogPostInput {
   series_name?: string | null;
   series_part?: number | null;
   previous_post_id?: string | null;
+  is_featured?: boolean;
 }
 
 const CATEGORY_LABELS: Record<BlogCategory, string> = {
@@ -86,6 +88,7 @@ export function usePublishedPosts(category?: BlogCategory, searchQuery?: string)
         .select('*')
         .eq('status', 'published')
         .is('deleted_at', null)
+        .order('is_featured', { ascending: false })
         .order('publication_date', { ascending: false });
 
       if (category) {

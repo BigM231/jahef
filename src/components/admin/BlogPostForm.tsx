@@ -63,6 +63,7 @@ export default function BlogPostForm({ editId, onBack, user }: BlogPostFormProps
   const [seriesName, setSeriesName] = useState('');
   const [seriesPart, setSeriesPart] = useState<number>(1);
   const [previousPostId, setPreviousPostId] = useState('');
+  const [isFeatured, setIsFeatured] = useState(false);
 
   // File state
   const [featuredImage, setFeaturedImage] = useState<File | null>(null);
@@ -107,6 +108,7 @@ export default function BlogPostForm({ editId, onBack, user }: BlogPostFormProps
       setFeaturedImageUrl(existingPost.featured_image_url || '');
       setAudioUrl(existingPost.audio_url || '');
       setAdditionalImageUrls(existingPost.additional_images || []);
+      setIsFeatured(existingPost.is_featured || false);
     }
   }, [existingPost]);
 
@@ -133,6 +135,7 @@ export default function BlogPostForm({ editId, onBack, user }: BlogPostFormProps
       setAudioUrl('');
       setAdditionalImages([]);
       setAdditionalImageUrls([]);
+      setIsFeatured(false);
     }
   }, [editId, user]);
 
@@ -230,6 +233,7 @@ export default function BlogPostForm({ editId, onBack, user }: BlogPostFormProps
         series_name: isSeries ? seriesName : null,
         series_part: isSeries ? seriesPart : null,
         previous_post_id: isSeries && previousPostId ? previousPostId : null,
+        is_featured: isFeatured,
       };
 
       if (isEditing && editId) {
@@ -453,6 +457,21 @@ export default function BlogPostForm({ editId, onBack, user }: BlogPostFormProps
               <CardTitle className="text-base">Post Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Featured Post Toggle */}
+              <div className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg">
+                <Checkbox
+                  id="featured"
+                  checked={isFeatured}
+                  onCheckedChange={(checked) => setIsFeatured(checked === true)}
+                />
+                <Label htmlFor="featured" className="text-sm font-medium cursor-pointer">
+                  Mark as Featured Post
+                </Label>
+              </div>
+              <p className="text-xs text-muted-foreground -mt-2">
+                Featured posts appear at the top of the News page
+              </p>
+
               <div className="space-y-2">
                 <Label>Category *</Label>
                 <Select value={category} onValueChange={(v) => setCategory(v as BlogCategory)}>
