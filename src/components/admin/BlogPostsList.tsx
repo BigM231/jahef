@@ -27,12 +27,25 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import blogPlaceholder from '@/assets/blog-placeholder.jpg';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface BlogPostsListProps {
   onEdit: (id: string) => void;
   onCreateNew: () => void;
   filterStatus: 'all' | 'published' | 'draft' | 'scheduled' | 'trash';
+}
+
+function extractFirstImageUrl(html?: string | null): string | null {
+  if (!html) return null;
+  try {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const img = doc.querySelector('img');
+    const src = img?.getAttribute('src');
+    return src && src.trim().length > 0 ? src : null;
+  } catch {
+    return null;
+  }
 }
 
 export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: BlogPostsListProps) {
@@ -185,7 +198,9 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
           <div className="space-y-4">
             {sortedPosts?.map((post) => {
               const isExpanded = expandedPosts.includes(post.id);
-              return (
+              const inlineImageUrl = extractFirstImageUrl(post.content);
+              const thumbnailUrl = post.featured_image_url || inlineImageUrl || blogPlaceholder;
+              const heroImageUrl = post.featured_image_url || inlineImageUrl;
                 <article key={post.id} className="bg-card rounded-2xl shadow-lg overflow-hidden border">
                   {/* Admin Actions Bar - Always visible */}
                   <div 
@@ -198,13 +213,14 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
                         onCheckedChange={() => toggleSelectPost(post.id)}
                         onClick={(e) => e.stopPropagation()}
                       />
-                      {post.featured_image_url ? (
-                        <img src={post.featured_image_url} alt="" className="w-12 h-12 object-cover rounded" />
-                      ) : (
-                        <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
-                          <FileText className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                      )}
+                      <img
+                        src={thumbnailUrl}
+                        alt={`${post.title} thumbnail`}
+                        className="w-12 h-12 object-cover rounded"
+                        onError={(e) => {
+                          e.currentTarget.src = blogPlaceholder;
+                        }}
+                      />
                       <div className="flex flex-col">
                         <span className="font-semibold line-clamp-1">{post.title}</span>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -236,12 +252,15 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
                   {isExpanded && (
                     <>
                       {/* Featured Image */}
-                      {post.featured_image_url && (
+                      {heroImageUrl && (
                         <div className="relative h-64 md:h-80 overflow-hidden">
                           <img 
-                            src={post.featured_image_url} 
+                            src={heroImageUrl} 
                             alt={post.title} 
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.src = blogPlaceholder;
+                            }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                           <div className="absolute bottom-6 left-6 right-6">
