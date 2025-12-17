@@ -22,20 +22,8 @@ import {
 } from '@/hooks/useBlogPosts';
 import { format } from 'date-fns';
 
-// Fallback images from gallery assets
-import schoolMaterialsImg from '@/assets/gallery/school-materials-distribution.jpeg';
-import communityOutreachImg from '@/assets/gallery/community-outreach-1.jpg';
-import educatorsMeetingImg from '@/assets/gallery/educators-meeting-1.jpg';
-import founderWithChildrenImg from '@/assets/gallery/founder-with-children-1.jpeg';
-import schoolVisitImg from '@/assets/gallery/school-visit-1.jpeg';
-
-const FALLBACK_IMAGES: Record<BlogCategory, string> = {
-  success_stories: founderWithChildrenImg,
-  program_updates: schoolMaterialsImg,
-  emergency_appeals: communityOutreachImg,
-  community_news: educatorsMeetingImg,
-  case_studies: schoolVisitImg,
-};
+// Default placeholder image with JAHEF branding
+import blogPlaceholder from '@/assets/blog-placeholder.jpg';
 
 const POSTS_PER_PAGE = 6;
 
@@ -161,7 +149,7 @@ const News = () => {
                   >
                     <div className="relative h-48 overflow-hidden">
                       <img
-                        src={post.featured_image_url || FALLBACK_IMAGES[post.category]}
+                        src={post.featured_image_url || blogPlaceholder}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
