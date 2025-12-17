@@ -35,7 +35,6 @@ const App = () => (
           <Route path="/donate" element={<Donate />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/upload" element={<UploadMedia />} />
-          <Route path="/blog" element={<Navigate to="/news" replace />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/admin/blog" element={<BlogAdmin />} />
           <Route path="/admin/blog/new" element={<BlogForm />} />
