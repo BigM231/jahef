@@ -201,6 +201,7 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
               const inlineImageUrl = extractFirstImageUrl(post.content);
               const thumbnailUrl = post.featured_image_url || inlineImageUrl || blogPlaceholder;
               const heroImageUrl = post.featured_image_url || inlineImageUrl;
+              return (
                 <article key={post.id} className="bg-card rounded-2xl shadow-lg overflow-hidden border">
                   {/* Admin Actions Bar - Always visible */}
                   <div 
