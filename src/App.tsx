@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Programs from "./pages/Programs";
@@ -14,7 +14,6 @@ import Auth from "./pages/Auth";
 import UploadMedia from "./pages/UploadMedia";
 import BlogPost from "./pages/BlogPost";
 import BlogAdmin from "./pages/BlogAdmin";
-import BlogForm from "./pages/BlogForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,8 +36,6 @@ const App = () => (
           <Route path="/upload" element={<UploadMedia />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/admin/blog" element={<BlogAdmin />} />
-          <Route path="/admin/blog/new" element={<BlogForm />} />
-          <Route path="/admin/blog/edit/:id" element={<BlogForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
