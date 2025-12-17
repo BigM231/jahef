@@ -43,10 +43,6 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
   const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
   const [expandedPosts, setExpandedPosts] = useState<string[]>([]);
 
-  const toggleExpandPost = (id: string) => setExpandedPosts(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
-  const expandAll = () => setExpandedPosts(sortedPosts?.map(p => p.id) || []);
-  const collapseAll = () => setExpandedPosts([]);
-
   const { data: posts, isLoading } = useAllPosts('all', searchQuery);
   const deletePost = useDeletePost();
   const queryClient = useQueryClient();
@@ -117,6 +113,10 @@ export default function BlogPostsList({ onEdit, onCreateNew, filterStatus }: Blo
     const dateB = new Date(b.created_at).getTime();
     return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
   });
+
+  const toggleExpandPost = (id: string) => setExpandedPosts(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
+  const expandAll = () => setExpandedPosts(sortedPosts?.map(p => p.id) || []);
+  const collapseAll = () => setExpandedPosts([]);
 
   const getStatusBadge = (status: BlogPostStatus) => {
     const badges: Record<string, JSX.Element> = {
