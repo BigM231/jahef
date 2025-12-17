@@ -1,27 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Upload, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/jahef-logo-color.png";
+import { useAdminStatus } from "@/hooks/useAdminStatus";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAdmin } = useAdminStatus();
   const location = useLocation();
-
-  useEffect(() => {
-    // Check authentication status
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -65,7 +52,7 @@ const Navigation = () => {
                 {item.name}
               </Link>
             ))}
-            {isAuthenticated && (
+            {isAdmin && (
               <>
                 <Link to="/admin/blog">
                   <Button variant="outline" size="sm" className="gap-2">
@@ -115,7 +102,7 @@ const Navigation = () => {
                 {item.name}
               </Link>
             ))}
-            {isAuthenticated && (
+            {isAdmin && (
               <>
                 <Link to="/admin/blog" onClick={() => setIsOpen(false)}>
                   <Button variant="outline" className="w-full mt-4 gap-2">

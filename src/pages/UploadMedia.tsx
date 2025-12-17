@@ -12,10 +12,11 @@ import { Upload, X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { useAdminStatus } from "@/hooks/useAdminStatus";
 
 export default function UploadMedia() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const { user, isAdmin, loading } = useAdminStatus();
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -37,28 +38,18 @@ export default function UploadMedia() {
   }, [file]);
 
   useEffect(() => {
-    // Check authentication
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-        return;
-      }
-      setUser(session.user);
-    };
+    if (loading) return;
 
-    checkAuth();
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate("/auth");
-      } else {
-        setUser(session.user);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    if (!isAdmin) {
+      toast.error("Access denied: Admin privileges required");
+      navigate("/");
+    }
+  }, [loading, user, isAdmin, navigate]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -192,8 +183,12 @@ export default function UploadMedia() {
     }
   };
 
-  if (!user) {
-    return null; // Will redirect to auth
+  if (loading) {
+    return null;
+  }
+
+  if (!user || !isAdmin) {
+    return null; // Will redirect
   }
 
   return (
