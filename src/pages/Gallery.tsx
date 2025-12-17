@@ -65,9 +65,10 @@ const Gallery = () => {
   useEffect(() => {
     // Fetch media from database
     const fetchMedia = async () => {
+      // Only select columns needed for display - excludes user_id for privacy
       const { data: media } = await supabase
         .from("gallery_media")
-        .select("*")
+        .select("id, title, description, category, media_type, file_url, created_at")
         .order("created_at", { ascending: false });
 
       if (media) {
