@@ -172,7 +172,7 @@ export default function Blog() {
           </div>
         </section>
 
-        {/* Recent Posts Sidebar (for larger screens, shown as section) */}
+        {/* Browse by Category */}
         {posts && posts.length > 0 && (
           <section className="py-12 bg-muted/30">
             <div className="container mx-auto px-4">
@@ -191,6 +191,27 @@ export default function Blog() {
             </div>
           </section>
         )}
+
+        {/* Upcoming Events */}
+        <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-center text-primary mb-12">
+              Upcoming Events
+            </h2>
+            <div className="max-w-3xl mx-auto text-center">
+              <p className="text-lg text-muted-foreground mb-6">
+                Stay tuned for announcements about our upcoming community events,
+                health education sessions, and support programs.
+              </p>
+              <Link
+                to="/contact"
+                className="inline-flex items-center justify-center px-8 py-3 bg-gradient-hero text-white font-secondary font-bold text-lg rounded-full hover:opacity-90 transition-opacity"
+              >
+                Contact Us for Information
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
       
       <Footer />
