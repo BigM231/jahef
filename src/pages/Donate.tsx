@@ -61,6 +61,17 @@ const Donate = () => {
     }
 
     if (gateway === "paystack") {
+      // Check if Paystack public key is configured
+      const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+      if (!paystackKey) {
+        toast({
+          title: "Configuration Error",
+          description: "Payment system is not configured. Please contact the administrator.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Check if Paystack is loaded
       if (!window.PaystackPop) {
         toast({
@@ -72,7 +83,7 @@ const Donate = () => {
       }
 
       const handler = window.PaystackPop.setup({
-        key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_15df41e162cdb9921b92853aeb232d70b9822985',
+        key: paystackKey,
         email: email,
         amount: parseFloat(donationAmount) * 100, // Convert to kobo
         currency: 'NGN',
