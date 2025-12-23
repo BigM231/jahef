@@ -97,7 +97,7 @@ const Footer = () => {
 
             <div className="flex gap-4 mt-4">
               <a
-                href="https://facebook.com/JessicaAkpobiHealthEmpoweringFoundation"
+                href="https://www.facebook.com/share/1ALPL1mzr2/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
@@ -115,7 +115,7 @@ const Footer = () => {
                 <Instagram size={24} />
               </a>
               <a
-                href="https://tiktok.com/@J_h_empowered_foundation"
+                href="https://www.tiktok.com/@j.a.h.e.f?_r=1&_t=ZM-92QYbPivCrQ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
