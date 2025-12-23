@@ -97,7 +97,7 @@ const Footer = () => {
 
             <div className="flex gap-4 mt-4">
               <a
-                href="https://www.facebook.com/share/1ALPL1mzr2/"
+                href="https://www.facebook.com/J.A.H.E.Foundation"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
