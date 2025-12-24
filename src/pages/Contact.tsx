@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Facebook, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -174,12 +174,6 @@ const Contact = () => {
                   </a>
                   <a href="https://www.tiktok.com/@j.a.h.e.f?_r=1&_t=ZM-92QYbPivCrQ" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="TikTok">
                     <TikTokIcon size={24} />
-                  </a>
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-colors" aria-label="X (Twitter)">
-                    <Twitter size={24} />
-                  </a>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-full transition-colors" aria-label="YouTube">
-                    <Youtube size={24} />
                   </a>
                 </div>
               </div>
