@@ -49,6 +49,15 @@ import video11 from "@/assets/gallery/videos/video-11.mp4";
 import video12 from "@/assets/gallery/videos/video-12.mp4";
 import video13 from "@/assets/gallery/videos/video-13.mp4";
 import video14 from "@/assets/gallery/videos/video-14.mp4";
+import video15 from "@/assets/gallery/videos/video-15.mp4";
+import video16 from "@/assets/gallery/videos/video-16.mp4";
+import video17 from "@/assets/gallery/videos/video-17.mp4";
+import video18 from "@/assets/gallery/videos/video-18.mp4";
+import video19 from "@/assets/gallery/videos/video-19.mp4";
+import video20 from "@/assets/gallery/videos/video-20.mp4";
+import video21 from "@/assets/gallery/videos/video-21.mp4";
+import video22 from "@/assets/gallery/videos/video-22.mp4";
+import video23 from "@/assets/gallery/videos/video-23.mp4";
 
 interface MediaItem {
   src: string;
@@ -318,6 +327,51 @@ const Gallery = () => {
     {
       src: video14,
       alt: "Community outreach program",
+      category: "Community Outreach",
+    },
+    {
+      src: video15,
+      alt: "Foundation program highlights",
+      category: "Community Outreach",
+    },
+    {
+      src: video16,
+      alt: "Educational support activities",
+      category: "School Support",
+    },
+    {
+      src: video17,
+      alt: "Community engagement event",
+      category: "Community Outreach",
+    },
+    {
+      src: video18,
+      alt: "School materials distribution",
+      category: "School Support",
+    },
+    {
+      src: video19,
+      alt: "Impact stories from the field",
+      category: "Community Outreach",
+    },
+    {
+      src: video20,
+      alt: "Educational program activities",
+      category: "School Support",
+    },
+    {
+      src: video21,
+      alt: "Community support initiatives",
+      category: "Community Outreach",
+    },
+    {
+      src: video22,
+      alt: "School partnership program",
+      category: "School Support",
+    },
+    {
+      src: video23,
+      alt: "Foundation outreach activities",
       category: "Community Outreach",
     },
   ];
