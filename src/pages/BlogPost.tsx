@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import Navigation from '@/components/Navigation';
@@ -24,6 +24,7 @@ import {
   usePostBySlug, 
   useSeriesPosts,
   useIncrementViewCount,
+  usePostById,
   getCategoryLabel, 
   getCategoryColor 
 } from '@/hooks/useBlogPosts';
@@ -45,6 +46,10 @@ export default function BlogPost() {
     post?.id
   );
   const incrementViewCount = useIncrementViewCount();
+  
+  // Fetch previous and next post data for navigation
+  const { data: previousPost } = usePostById(post?.previous_post_id || '');
+  const { data: nextPost } = usePostById(post?.next_post_id || '');
 
   // Increment view count on mount
   useEffect(() => {
@@ -290,9 +295,9 @@ export default function BlogPost() {
 
           {/* Post Navigation */}
           <div className="flex justify-between items-center">
-            {post.previous_post_id ? (
+            {previousPost?.slug ? (
               <Button variant="outline" asChild>
-                <Link to={`/blog/${post.previous_post_id}`}>
+                <Link to={`/blog/${previousPost.slug}`}>
                   <ChevronLeft className="h-4 w-4 mr-2" />
                   Previous Post
                 </Link>
@@ -307,9 +312,9 @@ export default function BlogPost() {
               </Link>
             </Button>
             
-            {post.next_post_id ? (
+            {nextPost?.slug ? (
               <Button variant="outline" asChild>
-                <Link to={`/blog/${post.next_post_id}`}>
+                <Link to={`/blog/${nextPost.slug}`}>
                   Next Post
                   <ChevronRight className="h-4 w-4 ml-2" />
                 </Link>
